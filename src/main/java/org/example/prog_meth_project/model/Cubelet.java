@@ -11,7 +11,6 @@ import static org.example.prog_meth_project.Config.*;
 public class Cubelet extends Group {
     private void setMaterialOfBox(Box borderBox){
         PhongMaterial material = new PhongMaterial(CUBELET_BORDER_COLOR);
-        material.setDiffuseColor(Color.BLACK);
         borderBox.setMaterial(material);
     }
     private Box makeXBorder(double xLength,double yLength, double zLength,int ySign, int zSign){
@@ -38,7 +37,6 @@ public class Cubelet extends Group {
     public Cubelet(double xLength, double yLength, double zLength){
         Box mainBox = new Box(xLength,yLength,zLength);
         PhongMaterial material = new PhongMaterial(CUBELET_MAIN_BOX_COLOR);
-        material.setDiffuseColor(Color.WHITE);
         mainBox.setMaterial(material);
 
         for(int i=-1;i<=1;i+=2){

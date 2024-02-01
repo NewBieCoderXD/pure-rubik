@@ -3,10 +3,14 @@ package org.example.prog_meth_project;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -29,6 +33,8 @@ import java.util.TimerTask;
 import javafx.stage.Window;
 import javafx.scene.DepthTest;
 
+import static org.example.prog_meth_project.Config.DRAG_SENSITIVITY;
+
 public class Main extends Application {
     final Group root = new Group();
     final Xform world = new Xform();
@@ -49,6 +55,8 @@ public class Main extends Application {
     private static final double CAMERA_NEAR_CLIP = 0.01;
     private static final double CAMERA_FAR_CLIP = 10000.0;
 
+    private double startDragX;
+    private double startDragY;
     @Override
     public void start(Stage stage) throws IOException {
 //        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
@@ -71,6 +79,30 @@ public class Main extends Application {
 
         Text text= new Text();
         root.getChildren().add(text);
+//        scene.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
+//            @Override
+//            public void handle(MouseDragEvent event) {
+//                System.out.println(event.toString());
+//            }
+//        });
+        scene.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                startDragX= event.getSceneX();
+                startDragY= event.getSceneY();
+            }
+        });
+        scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double xDistance=event.getSceneX()-startDragX;
+                double yDistance=event.getSceneY()-startDragY;
+                startDragX=event.getSceneX();
+                startDragY=event.getSceneY();
+                cameraXform.rz.setAngle(cameraXform.rz.getAngle()-xDistance*DRAG_SENSITIVITY);
+                cameraXform.rx.setAngle(cameraXform.rx.getAngle()+yDistance*DRAG_SENSITIVITY);
+            }
+        });
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()){
                 case A :{
@@ -168,6 +200,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }
