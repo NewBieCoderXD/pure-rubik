@@ -6,10 +6,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Screen;
@@ -22,8 +25,10 @@ import javafx.util.Duration;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Timer;
 import java.util.TimerTask;
+import javafx.stage.Window;
 
 public class Main extends Application {
     final Group root = new Group();
@@ -35,11 +40,13 @@ public class Main extends Application {
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
-    private static final double CAMERA_INITIAL_X_ANGLE = 70;
-    private static final double CAMERA_INITIAL_Y_ANGLE = 0;
-    private static final double CAMERA_INITIAL_Z_ANGLE = -70;
-    private static double CAMERA_X_ANGLE = CAMERA_INITIAL_X_ANGLE;
+    private static final double CAMERA_INITIAL_X_ANGLE = -52;
+    private static final double CAMERA_INITIAL_Y_ANGLE = -184;
+    private static final double CAMERA_INITIAL_Z_ANGLE = 138;
+//    private static double CAMERA_X_ANGLE = CAMERA_INITIAL_X_ANGLE;
+    private static double cameraXAngle = CAMERA_INITIAL_X_ANGLE;
     private static double cameraYAngle = CAMERA_INITIAL_Y_ANGLE;
+    private static double cameraZAngle = CAMERA_INITIAL_Z_ANGLE;
 
     private static final double CAMERA_NEAR_CLIP = 0.1;
     private static final double CAMERA_FAR_CLIP = 10000.0;
@@ -50,38 +57,69 @@ public class Main extends Application {
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-        Scene scene = new Scene(new Group(root), bounds.getWidth(), bounds.getHeight());
+        SubScene subScene = new SubScene(new Group(world), bounds.getWidth(), bounds.getHeight());
         buildCamera();
-        camera.setTranslateX(10);
-        camera.setTranslateY(10);
         buildAxes();
         buildRubik();
-        root.getChildren().add(world);
+        subScene.setCamera(camera);
+        Scene scene = new Scene(new Group(subScene,root), bounds.getWidth(), bounds.getHeight());
+
 //        stage.setFullScreen(true);
+        stage.setMaximized(true);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
-        scene.setCamera(camera);
-        rotateCameraAnimation();
+
+        Text text= new Text();
+        root.getChildren().add(text);
+        scene.setOnKeyPressed(e -> {
+            switch (e.getCode()){
+                case A :{
+                    cameraXform.rx.setAngle(--cameraXAngle);
+                    break;
+                }
+                case D :{
+                    cameraXform.rx.setAngle(++cameraXAngle);
+                    break;
+                }
+                case S :{
+                    cameraXform.ry.setAngle(--cameraYAngle);
+                    break;
+                }
+                case W :{
+                    cameraXform.ry.setAngle(++cameraYAngle);
+                    break;
+                }
+                case Z :{
+                    cameraXform.rz.setAngle(--cameraZAngle);
+                    break;
+                }
+                case X :{
+                    cameraXform.rz.setAngle(++cameraZAngle);
+                    break;
+                }
+            }
+            text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}",cameraXAngle,cameraYAngle,cameraZAngle));
+        });
+//        rotateCameraAnimation();
     }
 
     private void rotateCameraAnimation(){
-        Rotate yRotate = new Rotate(0,0,0,0,Rotate.Y_AXIS);
-        cameraXform.getTransforms().add(yRotate);
+        Rotate rotate = new Rotate(0,0,0,0,Rotate.Y_AXIS);
+        cameraXform.getTransforms().add(rotate);
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0.01), e -> {
                     cameraYAngle+=0.5;
-                    yRotate.setAngle(cameraYAngle);
+                    rotate.setAngle(cameraYAngle);
                 })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-        System.out.println("X:"+camera.getTranslateX());
     }
 
     private void buildRubik(){
         Box test = new Box(10,10,10);
-        root.getChildren().add(test);
+        world.getChildren().add(test);
     }
 
     private void buildCamera() {
