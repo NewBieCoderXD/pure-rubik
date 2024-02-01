@@ -5,8 +5,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -19,9 +18,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import javafx.scene.transform.Rotate;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
 import javafx.util.Duration;
+import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.io.IOException;
@@ -29,6 +27,7 @@ import java.text.MessageFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.stage.Window;
+import javafx.scene.DepthTest;
 
 public class Main extends Application {
     final Group root = new Group();
@@ -43,12 +42,11 @@ public class Main extends Application {
     private static final double CAMERA_INITIAL_X_ANGLE = -52;
     private static final double CAMERA_INITIAL_Y_ANGLE = -184;
     private static final double CAMERA_INITIAL_Z_ANGLE = 138;
-//    private static double CAMERA_X_ANGLE = CAMERA_INITIAL_X_ANGLE;
     private static double cameraXAngle = CAMERA_INITIAL_X_ANGLE;
     private static double cameraYAngle = CAMERA_INITIAL_Y_ANGLE;
     private static double cameraZAngle = CAMERA_INITIAL_Z_ANGLE;
 
-    private static final double CAMERA_NEAR_CLIP = 0.1;
+    private static final double CAMERA_NEAR_CLIP = 0.01;
     private static final double CAMERA_FAR_CLIP = 10000.0;
 
     @Override
@@ -57,7 +55,8 @@ public class Main extends Application {
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-        SubScene subScene = new SubScene(new Group(world), bounds.getWidth(), bounds.getHeight());
+        SubScene subScene = new SubScene(new Group(world), bounds.getWidth(), bounds.getHeight(),true,SceneAntialiasing.BALANCED);
+        subScene.setDepthTest(DepthTest.ENABLE);
         buildCamera();
         buildAxes();
         buildRubik();
@@ -75,27 +74,27 @@ public class Main extends Application {
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()){
                 case A :{
-                    cameraXform.rx.setAngle(--cameraXAngle);
-                    break;
-                }
-                case D :{
-                    cameraXform.rx.setAngle(++cameraXAngle);
-                    break;
-                }
-                case S :{
-                    cameraXform.ry.setAngle(--cameraYAngle);
-                    break;
-                }
-                case W :{
-                    cameraXform.ry.setAngle(++cameraYAngle);
-                    break;
-                }
-                case Z :{
                     cameraXform.rz.setAngle(--cameraZAngle);
                     break;
                 }
-                case X :{
+                case D :{
                     cameraXform.rz.setAngle(++cameraZAngle);
+                    break;
+                }
+                case S :{
+                    cameraXform.rx.setAngle(--cameraXAngle);
+                    break;
+                }
+                case W :{
+                    cameraXform.rx.setAngle(++cameraXAngle);
+                    break;
+                }
+                case Z :{
+                    cameraXform.ry.setAngle(--cameraYAngle);
+                    break;
+                }
+                case X :{
+                    cameraXform.ry.setAngle(++cameraYAngle);
                     break;
                 }
             }
@@ -104,21 +103,22 @@ public class Main extends Application {
 //        rotateCameraAnimation();
     }
 
-    private void rotateCameraAnimation(){
-        Rotate rotate = new Rotate(0,0,0,0,Rotate.Y_AXIS);
-        cameraXform.getTransforms().add(rotate);
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.01), e -> {
-                    cameraYAngle+=0.5;
-                    rotate.setAngle(cameraYAngle);
-                })
-        );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
+//    private void rotateCameraAnimation(){
+//        Rotate rotate = new Rotate(0,0,0,0,Rotate.Y_AXIS);
+//        cameraXform.getTransforms().add(rotate);
+//        Timeline timeline = new Timeline(
+//                new KeyFrame(Duration.seconds(0.01), e -> {
+//                    cameraYAngle+=0.5;
+//                    rotate.setAngle(cameraYAngle);
+//                })
+//        );
+//        timeline.setCycleCount(Timeline.INDEFINITE);
+//        timeline.play();
+//    }
 
     private void buildRubik(){
-        Box test = new Box(10,10,10);
+//        Box test = new Box(10,10,10);
+        Cubelet test = new Cubelet(10,10,10);
         world.getChildren().add(test);
     }
 
