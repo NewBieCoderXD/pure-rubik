@@ -7,9 +7,11 @@ public class Config {
     public static final Color CUBELET_MAIN_BOX_COLOR = Color.WHITE;
     public static final Color CUBELET_BORDER_COLOR = Color.GREY;
     public static final double DRAG_SENSITIVITY = 0.1;
-    public static final double CUBELET_SMALLEST_LENGTH = 3;
+    public static final double CUBELET_SMALLEST_WIDTH = 3;
+    public static final double CUBELET_SMALLEST_HEIGHT = 1;
 
     public static final double CUBELET_DISTANCE = 1;
 
-    public static final double CUBELET_GROWING_RATIO= 1.5;
+    public static final double CUBELET_GROWING_RATIO_VERTICAL= 3;
+    public static final double CUBELET_GROWING_RATIO_HORIZONTAL= 1.5;
 }

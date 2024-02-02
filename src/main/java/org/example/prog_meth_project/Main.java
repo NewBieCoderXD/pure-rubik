@@ -84,36 +84,6 @@ public class Main extends Application {
                 setAnglesText(text);
             }
         });
-//        scene.setOnKeyPressed(e -> {
-//            switch (e.getCode()) {
-//                case A: {
-//                    cameraXform.rz.setAngle(--cameraZAngle);
-//                    break;
-//                }
-//                case D: {
-//                    cameraXform.rz.setAngle(++cameraZAngle);
-//                    break;
-//                }
-//                case S: {
-//                    cameraXform.rx.setAngle(--cameraXAngle);
-//                    break;
-//                }
-//                case W: {
-//                    cameraXform.rx.setAngle(++cameraXAngle);
-//                    break;
-//                }
-//                case Z: {
-//                    cameraXform.ry.setAngle(--cameraYAngle);
-//                    break;
-//                }
-//                case X: {
-//                    cameraXform.ry.setAngle(++cameraYAngle);
-//                    break;
-//                }
-//            }
-//            text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXAngle, cameraYAngle, cameraZAngle));
-//        });
-//        rotateCameraAnimation();
     }
 
 //    private void rotateCameraAnimation(){
@@ -134,13 +104,13 @@ public class Main extends Application {
         for(int z=-1;z<=1;z++){
             for(int y=-1;y<=1;y++) {
                 for (int x = -1; x <= 1; x++) {
-                    double xLength = CUBELET_SMALLEST_LENGTH * Math.pow(CUBELET_GROWING_RATIO, x + 1);
-                    double yLength = CUBELET_SMALLEST_LENGTH * Math.pow(CUBELET_GROWING_RATIO, y + 1);
-                    double zLength = CUBELET_SMALLEST_LENGTH * Math.pow(CUBELET_GROWING_RATIO, z + 1);
+                    double xLength = CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1);
+                    double yLength = CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1);
+                    double zLength = CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1);
                     Cubelet cubelet = new Cubelet(xLength, yLength, zLength);
-                    cubelet.setTranslateX((CUBELET_SMALLEST_LENGTH * CUBELET_GROWING_RATIO + xLength / 2 + CUBELET_DISTANCE) * x);
-                    cubelet.setTranslateY((CUBELET_SMALLEST_LENGTH * CUBELET_GROWING_RATIO + yLength / 2 + CUBELET_DISTANCE) * y);
-                    cubelet.setTranslateZ((CUBELET_SMALLEST_LENGTH * CUBELET_GROWING_RATIO + zLength / 2 + CUBELET_DISTANCE) * z);
+                    cubelet.setTranslateX((CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL + xLength / 2 + CUBELET_DISTANCE) * -x);
+                    cubelet.setTranslateY((CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL + yLength / 2 + CUBELET_DISTANCE) * -y);
+                    cubelet.setTranslateZ((CUBELET_SMALLEST_HEIGHT * CUBELET_GROWING_RATIO_VERTICAL + zLength / 2 + CUBELET_DISTANCE) * -z);
                     world.getChildren().add(cubelet);
                 }
             }
