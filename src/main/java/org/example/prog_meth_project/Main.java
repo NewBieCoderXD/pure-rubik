@@ -17,7 +17,7 @@ import org.example.prog_meth_project.rendering.Xform;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-import static org.example.prog_meth_project.Config.DRAG_SENSITIVITY;
+import static org.example.prog_meth_project.Config.*;
 
 public class Main extends Application {
     final Group root = new Group();
@@ -32,15 +32,15 @@ public class Main extends Application {
     private static final double CAMERA_INITIAL_X_ANGLE = -52;
     private static final double CAMERA_INITIAL_Y_ANGLE = -184;
     private static final double CAMERA_INITIAL_Z_ANGLE = 138;
-    private static double cameraXAngle = CAMERA_INITIAL_X_ANGLE;
-    private static double cameraYAngle = CAMERA_INITIAL_Y_ANGLE;
-    private static double cameraZAngle = CAMERA_INITIAL_Z_ANGLE;
-
     private static final double CAMERA_NEAR_CLIP = 0.01;
     private static final double CAMERA_FAR_CLIP = 10000.0;
 
     private double startDragX;
     private double startDragY;
+
+    private void setAnglesText(Text text){
+        text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXform.rz.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -63,13 +63,8 @@ public class Main extends Application {
         stage.show();
 
         Text text = new Text();
+        setAnglesText(text);
         root.getChildren().add(text);
-//        scene.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
-//            @Override
-//            public void handle(MouseDragEvent event) {
-//                System.out.println(event.toString());
-//            }
-//        });
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -86,37 +81,38 @@ public class Main extends Application {
                 startDragY = event.getSceneY();
                 cameraXform.rz.setAngle(cameraXform.rz.getAngle() - xDistance * DRAG_SENSITIVITY);
                 cameraXform.rx.setAngle(cameraXform.rx.getAngle() + yDistance * DRAG_SENSITIVITY);
+                setAnglesText(text);
             }
         });
-        scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case A: {
-                    cameraXform.rz.setAngle(--cameraZAngle);
-                    break;
-                }
-                case D: {
-                    cameraXform.rz.setAngle(++cameraZAngle);
-                    break;
-                }
-                case S: {
-                    cameraXform.rx.setAngle(--cameraXAngle);
-                    break;
-                }
-                case W: {
-                    cameraXform.rx.setAngle(++cameraXAngle);
-                    break;
-                }
-                case Z: {
-                    cameraXform.ry.setAngle(--cameraYAngle);
-                    break;
-                }
-                case X: {
-                    cameraXform.ry.setAngle(++cameraYAngle);
-                    break;
-                }
-            }
-            text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXAngle, cameraYAngle, cameraZAngle));
-        });
+//        scene.setOnKeyPressed(e -> {
+//            switch (e.getCode()) {
+//                case A: {
+//                    cameraXform.rz.setAngle(--cameraZAngle);
+//                    break;
+//                }
+//                case D: {
+//                    cameraXform.rz.setAngle(++cameraZAngle);
+//                    break;
+//                }
+//                case S: {
+//                    cameraXform.rx.setAngle(--cameraXAngle);
+//                    break;
+//                }
+//                case W: {
+//                    cameraXform.rx.setAngle(++cameraXAngle);
+//                    break;
+//                }
+//                case Z: {
+//                    cameraXform.ry.setAngle(--cameraYAngle);
+//                    break;
+//                }
+//                case X: {
+//                    cameraXform.ry.setAngle(++cameraYAngle);
+//                    break;
+//                }
+//            }
+//            text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXAngle, cameraYAngle, cameraZAngle));
+//        });
 //        rotateCameraAnimation();
     }
 
@@ -135,8 +131,22 @@ public class Main extends Application {
 
     private void buildRubik() {
 //        Box test = new Box(10,10,10);
-        Cubelet test = new Cubelet(10, 10, 10);
-        world.getChildren().add(test);
+        for(int z=-1;z<=1;z++){
+            for(int y=-1;y<=1;y++) {
+                for (int x = -1; x <= 1; x++) {
+                    double xLength = CUBELET_SMALLEST_LENGTH * Math.pow(CUBELET_GROWING_RATIO, x + 1);
+                    double yLength = CUBELET_SMALLEST_LENGTH * Math.pow(CUBELET_GROWING_RATIO, y + 1);
+                    double zLength = CUBELET_SMALLEST_LENGTH * Math.pow(CUBELET_GROWING_RATIO, z + 1);
+                    Cubelet cubelet = new Cubelet(xLength, yLength, zLength);
+                    cubelet.setTranslateX((CUBELET_SMALLEST_LENGTH * CUBELET_GROWING_RATIO + xLength / 2 + CUBELET_DISTANCE) * x);
+                    cubelet.setTranslateY((CUBELET_SMALLEST_LENGTH * CUBELET_GROWING_RATIO + yLength / 2 + CUBELET_DISTANCE) * y);
+                    cubelet.setTranslateZ((CUBELET_SMALLEST_LENGTH * CUBELET_GROWING_RATIO + zLength / 2 + CUBELET_DISTANCE) * z);
+                    world.getChildren().add(cubelet);
+                }
+            }
+        }
+//        Cubelet test = new Cubelet(10, 10, 10);
+//        world.getChildren().add(test);
     }
 
     private void buildCamera() {
