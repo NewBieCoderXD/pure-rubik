@@ -1,37 +1,21 @@
 package org.example.prog_meth_project;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Timer;
-import java.util.TimerTask;
-import javafx.stage.Window;
-import javafx.scene.DepthTest;
 
 import static org.example.prog_meth_project.Config.DRAG_SENSITIVITY;
 
@@ -57,19 +41,20 @@ public class Main extends Application {
 
     private double startDragX;
     private double startDragY;
+
     @Override
     public void start(Stage stage) throws IOException {
 //        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-        SubScene subScene = new SubScene(new Group(world), bounds.getWidth(), bounds.getHeight(),true,SceneAntialiasing.BALANCED);
+        SubScene subScene = new SubScene(new Group(world), bounds.getWidth(), bounds.getHeight(), true, SceneAntialiasing.BALANCED);
         subScene.setDepthTest(DepthTest.ENABLE);
         buildCamera();
         buildAxes();
         buildRubik();
         subScene.setCamera(camera);
-        Scene scene = new Scene(new Group(subScene,root), bounds.getWidth(), bounds.getHeight());
+        Scene scene = new Scene(new Group(subScene, root), bounds.getWidth(), bounds.getHeight());
 
 //        stage.setFullScreen(true);
         stage.setMaximized(true);
@@ -77,7 +62,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
-        Text text= new Text();
+        Text text = new Text();
         root.getChildren().add(text);
 //        scene.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
 //            @Override
@@ -88,49 +73,49 @@ public class Main extends Application {
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                startDragX= event.getSceneX();
-                startDragY= event.getSceneY();
+                startDragX = event.getSceneX();
+                startDragY = event.getSceneY();
             }
         });
         scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                double xDistance=event.getSceneX()-startDragX;
-                double yDistance=event.getSceneY()-startDragY;
-                startDragX=event.getSceneX();
-                startDragY=event.getSceneY();
-                cameraXform.rz.setAngle(cameraXform.rz.getAngle()-xDistance*DRAG_SENSITIVITY);
-                cameraXform.rx.setAngle(cameraXform.rx.getAngle()+yDistance*DRAG_SENSITIVITY);
+                double xDistance = event.getSceneX() - startDragX;
+                double yDistance = event.getSceneY() - startDragY;
+                startDragX = event.getSceneX();
+                startDragY = event.getSceneY();
+                cameraXform.rz.setAngle(cameraXform.rz.getAngle() - xDistance * DRAG_SENSITIVITY);
+                cameraXform.rx.setAngle(cameraXform.rx.getAngle() + yDistance * DRAG_SENSITIVITY);
             }
         });
         scene.setOnKeyPressed(e -> {
-            switch (e.getCode()){
-                case A :{
+            switch (e.getCode()) {
+                case A: {
                     cameraXform.rz.setAngle(--cameraZAngle);
                     break;
                 }
-                case D :{
+                case D: {
                     cameraXform.rz.setAngle(++cameraZAngle);
                     break;
                 }
-                case S :{
+                case S: {
                     cameraXform.rx.setAngle(--cameraXAngle);
                     break;
                 }
-                case W :{
+                case W: {
                     cameraXform.rx.setAngle(++cameraXAngle);
                     break;
                 }
-                case Z :{
+                case Z: {
                     cameraXform.ry.setAngle(--cameraYAngle);
                     break;
                 }
-                case X :{
+                case X: {
                     cameraXform.ry.setAngle(++cameraYAngle);
                     break;
                 }
             }
-            text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}",cameraXAngle,cameraYAngle,cameraZAngle));
+            text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXAngle, cameraYAngle, cameraZAngle));
         });
 //        rotateCameraAnimation();
     }
@@ -148,9 +133,9 @@ public class Main extends Application {
 //        timeline.play();
 //    }
 
-    private void buildRubik(){
+    private void buildRubik() {
 //        Box test = new Box(10,10,10);
-        Cubelet test = new Cubelet(10,10,10);
+        Cubelet test = new Cubelet(10, 10, 10);
         world.getChildren().add(test);
     }
 
