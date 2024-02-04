@@ -1,5 +1,7 @@
 package org.example.prog_meth_project;
 
+import com.ggFROOK.InvalidRubikNotation;
+import com.ggFROOK.RubikFROOK;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -21,6 +23,7 @@ import org.example.prog_meth_project.model.Rubik;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -47,6 +50,9 @@ public class Main extends Application {
 
     private double startDragX;
     private double startDragY;
+    private final ParallelTransition pt = new ParallelTransition();
+
+    private RubikFROOK rubikFROOK = new RubikFROOK();
 
     private void setAnglesText(Text text){
         text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXform.rz.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
@@ -76,15 +82,19 @@ public class Main extends Application {
         notationQueue.add(Notation.R_);
         notationQueue.add(Notation.L);
         notationQueue.add(Notation.L_);
-        notationQueue.add(Notation.U);
-        notationQueue.add(Notation.U_);
-        notationQueue.add(Notation.D);
-        notationQueue.add(Notation.D_);
-        notationQueue.add(Notation.F);
-        notationQueue.add(Notation.F_);
-        notationQueue.add(Notation.B);
-        notationQueue.add(Notation.B_);
+//        notationQueue.add(Notation.U);
+//        notationQueue.add(Notation.U_);
+//        notationQueue.add(Notation.D);
+//        notationQueue.add(Notation.D_);
+//        notationQueue.add(Notation.F);
+//        notationQueue.add(Notation.F_);
+//        notationQueue.add(Notation.B);
+//        notationQueue.add(Notation.B_);
+
         startAnimation();
+        ERROR HERE
+        System.out.println(rubikFROOK.mainSolving());
+        // not work because called instantly
 
         Text text = new Text();
         setAnglesText(text);
@@ -116,11 +126,14 @@ public class Main extends Application {
     }
 
     private void startAnimation(){
-        ParallelTransition pt = new ParallelTransition();
+        if(pt.getStatus()== Animation.Status.RUNNING){
+            return;
+        }
         Notation notation = notationQueue.poll();
         if(notation==null){
             return;
         }
+        pt.getChildren().clear();
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotate rotate = new Rotate();
             rotate.setPivotX(-cubelet.getTranslateX());
@@ -144,8 +157,8 @@ public class Main extends Application {
             );
             timeline.setCycleCount(1);
             pt.getChildren().add(timeline);
-            callNotation(notation);
         }
+        callNotation(notation,true);
         pt.setOnFinished(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event){
@@ -155,8 +168,17 @@ public class Main extends Application {
         pt.play();
     }
 
-    private void callNotation(Notation notation){
-
+    private void callNotation(Notation notation, boolean IsScramble){
+        try{
+            if(rubikFROOK.getRubik()==null){
+                rubikFROOK.initRubik();
+            }
+            System.out.println(notation.toString());
+            rubikFROOK.call(notation.toString(),IsScramble);
+        }
+        catch(InvalidRubikNotation e){
+            System.out.println(e);
+        }
     }
 
     private void buildCamera() {

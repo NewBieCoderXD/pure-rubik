@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.example.prog_meth_project.Config.*;
-
+import com.ggFROOK.RubikFROOK;
 public class Rubik extends Group {
     private final ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix;
 
@@ -58,7 +58,6 @@ public class Rubik extends Group {
             case X_AXIS -> getSideX(distance);
             case Y_AXIS -> getSideY(distance);
             case Z_AXIS -> getSideZ(distance);
-            default -> null;
         };
     }
     public ArrayList<Cubelet> getSideX(int direction){
