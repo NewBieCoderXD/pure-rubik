@@ -1,7 +1,10 @@
 package org.example.prog_meth_project;
 
+import javafx.animation.*;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
@@ -9,13 +12,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.prog_meth_project.model.Cubelet;
+import org.example.prog_meth_project.model.Rubik;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 import static org.example.prog_meth_project.Config.*;
 
@@ -28,6 +36,8 @@ public class Main extends Application {
     final Xform cameraXform = new Xform();
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
+    private Rubik rubik;
+    private Queue<Notation> notationQueue = new ArrayDeque<>();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
     private static final double CAMERA_INITIAL_X_ANGLE = -52;
     private static final double CAMERA_INITIAL_Y_ANGLE = -184;
@@ -62,6 +72,10 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
+        notationQueue.add(Notation.R);
+        notationQueue.add(Notation.R_);
+        startAnimation();
+
         Text text = new Text();
         setAnglesText(text);
         root.getChildren().add(text);
@@ -86,37 +100,51 @@ public class Main extends Application {
         });
     }
 
-//    private void rotateCameraAnimation(){
-//        Rotate rotate = new Rotate(0,0,0,0,Rotate.Y_AXIS);
-//        cameraXform.getTransforms().add(rotate);
-//        Timeline timeline = new Timeline(
-//                new KeyFrame(Duration.seconds(0.01), e -> {
-//                    cameraYAngle+=0.5;
-//                    rotate.setAngle(cameraYAngle);
-//                })
-//        );
-//        timeline.setCycleCount(Timeline.INDEFINITE);
-//        timeline.play();
-//    }
-
     private void buildRubik() {
-//        Box test = new Box(10,10,10);
-        for(int z=-1;z<=1;z++){
-            for(int y=-1;y<=1;y++) {
-                for (int x = -1; x <= 1; x++) {
-                    double xLength = CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1);
-                    double yLength = CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1);
-                    double zLength = CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1);
-                    Cubelet cubelet = new Cubelet(xLength, yLength, zLength);
-                    cubelet.setTranslateX((CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL + xLength / 2 + CUBELET_DISTANCE) * -x);
-                    cubelet.setTranslateY((CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL + yLength / 2 + CUBELET_DISTANCE) * -y);
-                    cubelet.setTranslateZ((CUBELET_SMALLEST_HEIGHT * CUBELET_GROWING_RATIO_VERTICAL + zLength / 2 + CUBELET_DISTANCE) * -z);
-                    world.getChildren().add(cubelet);
-                }
-            }
+        rubik = new Rubik();
+        world.getChildren().add(rubik);
+    }
+
+    private void startAnimation(){
+        ParallelTransition pt = new ParallelTransition();
+        Notation notation = notationQueue.poll();
+        if(notation==null){
+            return;
         }
-//        Cubelet test = new Cubelet(10, 10, 10);
-//        world.getChildren().add(test);
+        for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
+            Rotate rotate = new Rotate();
+            rotate.setPivotX(-cubelet.getTranslateX());
+            rotate.setPivotY(-cubelet.getTranslateY());
+            rotate.setPivotZ(-cubelet.getTranslateZ());
+            rotate.setAxis(Rotate.X_AXIS);
+            cubelet.getTransforms().add(rotate);
+            int sign = 1;
+            if(notation.IsInverted){
+               sign=-1;
+            }
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(rotate.angleProperty(), 0)
+                    ),
+                    new KeyFrame(Duration.seconds(10),
+                            new KeyValue(rotate.angleProperty(), sign*90)
+                    )
+            );
+            timeline.setCycleCount(1);
+            pt.getChildren().add(timeline);
+            callNotation(notation);
+        }
+        pt.setOnFinished(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event){
+                startAnimation();
+            }
+        });
+        pt.play();
+    }
+
+    private void callNotation(Notation notation){
+
     }
 
     private void buildCamera() {
