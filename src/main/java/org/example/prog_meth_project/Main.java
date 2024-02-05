@@ -146,14 +146,14 @@ public class Main extends Application {
         pt.getChildren().clear();
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotate rotate = new Rotate();
-            Bounds locationBound=cubelet.getBoundsInParent();
+            Bounds locationBound=cubelet.localToScene(cubelet.getBoundsInParent());
 //            rotate.setPivotX(-cubelet.getTranslateX());
 //            rotate.setPivotY(-cubelet.getTranslateY());
 //            rotate.setPivotZ(-cubelet.getTranslateZ());
-            rotate.setPivotX(-locationBound.getCenterX());
-            rotate.setPivotY(-locationBound.getCenterY());
-            rotate.setPivotZ(-locationBound.getCenterZ());
-            System.out.println(cubelet.toString()+" "+cubelet.getTranslateY()+" "+cubelet.getBoundsInParent().getCenterY());
+            rotate.setPivotX(locationBound.getCenterX());
+            rotate.setPivotY(locationBound.getCenterY());
+            rotate.setPivotZ(locationBound.getCenterZ());
+            System.out.println(cubelet.toString()+" "+cubelet.getTranslateY()+" "+cubelet.localToScene(cubelet.getBoundsInLocal()).getCenterY());
             rotate.setAxis(notation.axis.toPoint3D());
             rotate.setAngle(0);
             cubelet.getTransforms().add(rotate);
