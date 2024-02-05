@@ -15,7 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -146,17 +148,9 @@ public class Main extends Application {
         pt.getChildren().clear();
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotate rotate = new Rotate();
-            Bounds locationBound=cubelet.localToScene(cubelet.getBoundsInParent());
-//            rotate.setPivotX(-cubelet.getTranslateX());
-//            rotate.setPivotY(-cubelet.getTranslateY());
-//            rotate.setPivotZ(-cubelet.getTranslateZ());
-            rotate.setPivotX(locationBound.getCenterX());
-            rotate.setPivotY(locationBound.getCenterY());
-            rotate.setPivotZ(locationBound.getCenterZ());
-            System.out.println(cubelet.toString()+" "+cubelet.getTranslateY()+" "+cubelet.localToScene(cubelet.getBoundsInLocal()).getCenterY());
-            rotate.setAxis(notation.axis.toPoint3D());
-            rotate.setAngle(0);
-            cubelet.getTransforms().add(rotate);
+
+            final double[] oldAngle=new double[]{0};
+//            cubelet.getTransforms().add(rotate);
             int sign = 1;
             if(notation.IsInverted){
                sign=-1;
@@ -170,6 +164,19 @@ public class Main extends Application {
                             new KeyValue(rotate.angleProperty(), sign*90)
                     )
             );
+            timeline.currentTimeProperty().addListener((observable,oldValue,newValue)->{
+                Rotate rotate2 = new Rotate();
+                Point3D origin = cubelet.parentToLocal(new Point3D(0,0,0));
+                rotate2.setPivotX(origin.getX());
+                rotate2.setPivotY(origin.getY());
+                rotate2.setPivotZ(origin.getZ());
+                rotate2.setAxis(notation.axis.toPoint3D());
+                rotate2.setAngle(rotate.getAngle()-oldAngle[0]);
+                Affine affine = cubelet.getAffine();
+                affine.prepend(rotate2);
+                cubelet.setAffine(affine);
+                oldAngle[0]=rotate.getAngle();
+            });
             timeline.setCycleCount(1);
             pt.getChildren().add(timeline);
         }

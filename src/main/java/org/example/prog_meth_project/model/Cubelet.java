@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.transform.Affine;
 
 import static org.example.prog_meth_project.Config.*;
 
@@ -38,10 +39,19 @@ public class Cubelet extends Group {
     }
 
     private Box mainBox;
+    public Affine getAffine(){
+        return (Affine)this.getTransforms().get(0);
+    }
+    public void setAffine(Affine affine){
+        this.getTransforms().setAll(affine);
+    }
     public void setMainBoxMaterial(Material material){
         mainBox.setMaterial(material);
     }
+
     public Cubelet(double xLength, double yLength, double zLength) {
+        Affine affine=new Affine();
+        this.getTransforms().setAll(affine);
         mainBox = new Box(xLength, yLength, zLength);
         PhongMaterial material = new PhongMaterial(CUBELET_MAIN_BOX_COLOR);
         mainBox.setMaterial(material);
