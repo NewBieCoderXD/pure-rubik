@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.model.Rubik;
+import org.example.prog_meth_project.rendering.Rotation;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.io.IOException;
@@ -147,9 +148,18 @@ public class Main extends Application {
         }
         pt.getChildren().clear();
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
-            Rotate rotate = new Rotate();
-
-            final double[] oldAngle=new double[]{0};
+            Rotation rotation = new Rotation(cubelet,notation);
+            rotation.addListener(new Rotation.RotateListener(){
+                public void onAngleChanges(Rotate rotate,double oldAngle,double newAngle){
+                    rotate.setAngle(newAngle-oldAngle);
+                    Affine affine = cubelet.getAffine();
+                    affine.prepend(rotate);
+                    cubelet.setAffine(affine);
+                }
+            });
+//            Affine affine = cubelet.getAffine();
+//            affine.prepend(rotate);
+//            cubelet.setAffine(affine);
 //            cubelet.getTransforms().add(rotate);
             int sign = 1;
             if(notation.IsInverted){
@@ -158,25 +168,12 @@ public class Main extends Application {
             sign*=notation.direction;
             Timeline timeline = new Timeline(
                     new KeyFrame(Duration.ZERO,
-                            new KeyValue(rotate.angleProperty(), 0)
+                            new KeyValue(rotation, 0d)
                     ),
                     new KeyFrame(Duration.seconds(SECOND_PER_NOTATION),
-                            new KeyValue(rotate.angleProperty(), sign*90)
+                            new KeyValue(rotation, sign*90d)
                     )
             );
-            timeline.currentTimeProperty().addListener((observable,oldValue,newValue)->{
-                Rotate rotate2 = new Rotate();
-                Point3D origin = cubelet.parentToLocal(new Point3D(0,0,0));
-                rotate2.setPivotX(origin.getX());
-                rotate2.setPivotY(origin.getY());
-                rotate2.setPivotZ(origin.getZ());
-                rotate2.setAxis(notation.axis.toPoint3D());
-                rotate2.setAngle(rotate.getAngle()-oldAngle[0]);
-                Affine affine = cubelet.getAffine();
-                affine.prepend(rotate2);
-                cubelet.setAffine(affine);
-                oldAngle[0]=rotate.getAngle();
-            });
             timeline.setCycleCount(1);
             pt.getChildren().add(timeline);
         }
