@@ -6,6 +6,7 @@ import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
@@ -87,7 +88,7 @@ public class Main extends Application {
 //        notationQueue.add(Notation.R_);
 //        notationQueue.add(Notation.L);
 //        notationQueue.add(Notation.L_);
-//        notationQueue.add(Notation.U);
+        notationQueue.add(Notation.U);
 //        notationQueue.add(Notation.U_);
 //        notationQueue.add(Notation.D);
 //        notationQueue.add(Notation.D_);
@@ -135,7 +136,7 @@ public class Main extends Application {
         if(notation==null){
             if(startSolving){
                 rubikFROOK.mainSolving();
-                for(Cubelet cubelet: rubik.getSideZ(1)){
+                for(Cubelet cubelet: rubik.getSideZ(-1)){
                     cubelet.setMainBoxMaterial(new PhongMaterial(Color.GREEN));
                 }
                 System.out.println(rubikFROOK.getSolution().toString());
@@ -145,9 +146,14 @@ public class Main extends Application {
         pt.getChildren().clear();
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotate rotate = new Rotate();
-            rotate.setPivotX(-cubelet.getTranslateX());
-            rotate.setPivotY(-cubelet.getTranslateY());
-            rotate.setPivotZ(-cubelet.getTranslateZ());
+            Bounds locationBound=cubelet.getBoundsInParent();
+//            rotate.setPivotX(-cubelet.getTranslateX());
+//            rotate.setPivotY(-cubelet.getTranslateY());
+//            rotate.setPivotZ(-cubelet.getTranslateZ());
+            rotate.setPivotX(-locationBound.getCenterX());
+            rotate.setPivotY(-locationBound.getCenterY());
+            rotate.setPivotZ(-locationBound.getCenterZ());
+            System.out.println(cubelet.toString()+" "+cubelet.getTranslateY()+" "+cubelet.getBoundsInParent().getCenterY());
             rotate.setAxis(notation.axis.toPoint3D());
             rotate.setAngle(0);
             cubelet.getTransforms().add(rotate);
