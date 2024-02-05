@@ -1,6 +1,7 @@
 package org.example.prog_meth_project.model;
 
 import javafx.scene.Group;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
@@ -36,8 +37,12 @@ public class Cubelet extends Group {
         return borderBox;
     }
 
+    private Box mainBox;
+    public void setMainBoxMaterial(Material material){
+        mainBox.setMaterial(material);
+    }
     public Cubelet(double xLength, double yLength, double zLength) {
-        Box mainBox = new Box(xLength, yLength, zLength);
+        mainBox = new Box(xLength, yLength, zLength);
         PhongMaterial material = new PhongMaterial(CUBELET_MAIN_BOX_COLOR);
         mainBox.setMaterial(material);
 

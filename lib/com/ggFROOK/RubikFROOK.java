@@ -635,7 +635,7 @@ public class RubikFROOK {
     }
   }
 
-  public void solve() throws InvalidRubikNotation{
+  private void solve() throws InvalidRubikNotation{
     while(!checkCross()){
       cross();
     }

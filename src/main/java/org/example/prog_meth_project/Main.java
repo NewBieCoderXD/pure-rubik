@@ -53,6 +53,7 @@ public class Main extends Application {
     private final ParallelTransition pt = new ParallelTransition();
 
     private RubikFROOK rubikFROOK = new RubikFROOK();
+    private boolean startSolving = true;
 
     private void setAnglesText(Text text){
         text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXform.rz.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
@@ -72,6 +73,10 @@ public class Main extends Application {
         subScene.setCamera(camera);
         Scene scene = new Scene(new Group(subScene, root), bounds.getWidth(), bounds.getHeight());
 
+        Text text = new Text();
+        setAnglesText(text);
+        root.getChildren().add(text);
+
 //        stage.setFullScreen(true);
         stage.setMaximized(true);
         stage.setTitle("Hello!");
@@ -79,9 +84,9 @@ public class Main extends Application {
         stage.show();
 
         notationQueue.add(Notation.R);
-        notationQueue.add(Notation.R_);
-        notationQueue.add(Notation.L);
-        notationQueue.add(Notation.L_);
+//        notationQueue.add(Notation.R_);
+//        notationQueue.add(Notation.L);
+//        notationQueue.add(Notation.L_);
 //        notationQueue.add(Notation.U);
 //        notationQueue.add(Notation.U_);
 //        notationQueue.add(Notation.D);
@@ -92,13 +97,10 @@ public class Main extends Application {
 //        notationQueue.add(Notation.B_);
 
         startAnimation();
-        ERROR HERE
-        System.out.println(rubikFROOK.mainSolving());
+
+//        System.out.println(rubikFROOK.mainSolving());
         // not work because called instantly
 
-        Text text = new Text();
-        setAnglesText(text);
-        root.getChildren().add(text);
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -131,6 +133,13 @@ public class Main extends Application {
         }
         Notation notation = notationQueue.poll();
         if(notation==null){
+            if(startSolving){
+                rubikFROOK.mainSolving();
+                for(Cubelet cubelet: rubik.getSideZ(1)){
+                    cubelet.setMainBoxMaterial(new PhongMaterial(Color.GREEN));
+                }
+                System.out.println(rubikFROOK.getSolution().toString());
+            }
             return;
         }
         pt.getChildren().clear();
@@ -158,10 +167,10 @@ public class Main extends Application {
             timeline.setCycleCount(1);
             pt.getChildren().add(timeline);
         }
-        callNotation(notation,true);
         pt.setOnFinished(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event){
+                callNotation(notation,true);
                 startAnimation();
             }
         });
@@ -174,6 +183,7 @@ public class Main extends Application {
                 rubikFROOK.initRubik();
             }
             System.out.println(notation.toString());
+            rubik.call(notation);
             rubikFROOK.call(notation.toString(),IsScramble);
         }
         catch(InvalidRubikNotation e){
