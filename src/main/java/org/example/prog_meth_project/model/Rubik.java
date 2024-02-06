@@ -1,5 +1,6 @@
 package org.example.prog_meth_project.model;
 
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -34,14 +35,24 @@ public class Rubik extends Group {
         }
     }
 
+    private static Point3D getLengthOfCubeletAt(int x, int y, int z){
+        return new Point3D(
+            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1),
+            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1),
+            CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1)
+        );
+    }
+
     private static Cubelet createCubelet(int x, int y, int z) {
-        double xLength = CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1);
-        double yLength = CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1);
-        double zLength = CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1);
+        Point3D lengthOfCubelet = getLengthOfCubeletAt(x,y,z);
+        double xLength = lengthOfCubelet.getX();
+        double yLength = lengthOfCubelet.getY();
+        double zLength = lengthOfCubelet.getZ();
+        Point3D lengthOfCenterCubelet = getLengthOfCubeletAt(0,0,0);
         Cubelet cubelet = new Cubelet(xLength, yLength, zLength);
-        cubelet.setTranslateX((CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL + xLength / 2 + CUBELET_DISTANCE) * -x);
-        cubelet.setTranslateY((CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL + yLength / 2 + CUBELET_DISTANCE) * -y);
-        cubelet.setTranslateZ((CUBELET_SMALLEST_HEIGHT * CUBELET_GROWING_RATIO_VERTICAL + zLength / 2 + CUBELET_DISTANCE) * -z);
+        cubelet.setTranslateX((lengthOfCenterCubelet.getX()/2 + xLength / 2 + CUBELET_DISTANCE) * -x);
+        cubelet.setTranslateY((lengthOfCenterCubelet.getY()/2 + yLength / 2 + CUBELET_DISTANCE) * -y);
+        cubelet.setTranslateZ((lengthOfCenterCubelet.getZ()/2 + zLength / 2 + CUBELET_DISTANCE) * -z);
         return cubelet;
     }
 
@@ -165,66 +176,10 @@ public class Rubik extends Group {
     public void call(Notation notation){
         swapCorners(notation);
         swapEdges(notation);
-//        Map.Entry<Integer,Integer>[] source=new Map.Entry[]{
-//                Map.entry(2,0),
-//                Map.entry(2,2),
-//                Map.entry(0,2),
-//
-//                Map.entry(1,0),
-//                Map.entry(2,1),
-//                Map.entry(1,2),
-//        };
-//        Map.Entry<Integer,Integer>[] target=new Map.Entry[]{
-//                Map.entry(0,0),
-//                Map.entry(2,0),
-//                Map.entry(2,2),
-//
-//                Map.entry(0,1),
-//                Map.entry(1,0),
-//                Map.entry(2,1),
-//        };
-//        for(int i=0;i<6;i++) {
-//            int sourceX = 0, sourceY = 0, sourceZ = 0,
-//                targetX = 0, targetY = 0, targetZ = 0;
-//            switch (notation.axis) {
-//                case X_AXIS: {
-//                    sourceX = notation.direction+1;
-//                    sourceY = source[i].getKey();
-//                    sourceZ = source[i].getValue();
-//                    targetX = notation.direction+1;
-//                    targetY = target[i].getKey();
-//                    targetZ = target[i].getValue();
-//                    break;
-//                }
-//                case Y_AXIS: {
-//                    sourceX = source[i].getKey();
-//                    sourceY = notation.direction+1;
-//                    sourceZ = source[i].getValue();
-//                    targetX = target[i].getKey();
-//                    targetY = notation.direction+1;
-//                    targetZ = target[i].getValue();
-//                    break;
-//                }
-//                case Z_AXIS: {
-//                    sourceX = source[i].getKey();
-//                    sourceY = source[i].getValue();
-//                    sourceZ = notation.direction+1;
-//                    targetX = target[i].getKey();
-//                    targetY = target[i].getValue();
-//                    targetZ = notation.direction+1;
-//                    break;
-//                }
-//            }
-//            swapRubikMatrix(sourceX,sourceY,sourceZ,targetX,targetY,targetZ);
-//        }
-
     }
 
     private void swapRubikMatrix(int lhsX, int lhsY,int lhsZ, int rhsX, int rhsY,int rhsZ){
-//        System.out.println(lhsX+" "+lhsY+" "+lhsZ+" "+rhsX+" "+rhsY+" "+rhsZ);
         Cubelet temp = rubikObjectMatrix.get(lhsZ).get(lhsY).get(lhsX);
-//        temp.setMainBoxMaterial(new PhongMaterial(Color.GREEN));
-//        rubikObjectMatrix.get(rhsZ).get(rhsY).get(rhsX).setMainBoxMaterial(new PhongMaterial(Color.RED));
         rubikObjectMatrix.get(lhsZ).get(lhsY).set(lhsX,rubikObjectMatrix.get(rhsZ).get(rhsY).get(rhsX));
         rubikObjectMatrix.get(rhsZ).get(rhsY).set(rhsX,temp);
     }
