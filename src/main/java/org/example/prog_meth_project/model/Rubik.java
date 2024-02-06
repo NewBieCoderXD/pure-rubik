@@ -151,7 +151,11 @@ public class Rubik extends Group {
 
     private void swapThreeTimes(Notation notation,Map.Entry<Integer,Integer>[] clockwiseOrder){
         // swap three times
-        if(notation.IsInverted==(notation.direction==-1)){
+        int sign = 1;
+        if(notation.IsInverted){
+            sign=-1;
+        }
+        if(sign>0){
             for (int i = 0; i < 3; i++) {
                 swapFromNotation(notation, clockwiseOrder[i], clockwiseOrder[i + 1]);
             }

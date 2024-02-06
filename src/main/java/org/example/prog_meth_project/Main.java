@@ -95,7 +95,7 @@ public class Main extends Application {
 //        world.getChildren().add(something);
 
 //        notationQueue.add(Notation.R);
-//        notationQueue.add(Notation.R_);
+        notationQueue.add(Notation.R_);
 //        notationQueue.add(Notation.L);
 //        notationQueue.add(Notation.L_);
 //        notationQueue.add(Notation.U);
