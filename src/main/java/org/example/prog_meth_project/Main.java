@@ -89,13 +89,13 @@ public class Main extends Application {
 
         notationQueue.add(Notation.R);
 //        notationQueue.add(Notation.R_);
-//        notationQueue.add(Notation.L);
+        notationQueue.add(Notation.L);
 //        notationQueue.add(Notation.L_);
         notationQueue.add(Notation.U);
 //        notationQueue.add(Notation.U_);
 //        notationQueue.add(Notation.D);
-//        notationQueue.add(Notation.D_);
-//        notationQueue.add(Notation.F);
+        notationQueue.add(Notation.D_);
+        notationQueue.add(Notation.F);
 //        notationQueue.add(Notation.F_);
 //        notationQueue.add(Notation.B);
 //        notationQueue.add(Notation.B_);
@@ -154,7 +154,6 @@ public class Main extends Application {
                     rotate.setAngle(newAngle-oldAngle);
                     Affine affine = cubelet.getAffine();
                     affine.prepend(rotate);
-                    cubelet.setAffine(affine);
                 }
             });
 //            Affine affine = cubelet.getAffine();
