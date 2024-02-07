@@ -155,12 +155,18 @@ public class Rubik extends Group {
         if(notation.IsInverted){
             sign=-1;
         }
+        if(notation.axis==Axis.Y_AXIS){
+            sign*=-1;
+        }
+        sign*=notation.direction;
         if(sign>0){
+            //anti clockwise
             for (int i = 0; i < 3; i++) {
                 swapFromNotation(notation, clockwiseOrder[i], clockwiseOrder[i + 1]);
             }
         }
         else{
+            //clockwise
             for (int i = 3; i >= 1; i--) {
                 swapFromNotation(notation, clockwiseOrder[i], clockwiseOrder[i - 1]);
             }

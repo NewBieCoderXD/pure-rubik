@@ -56,7 +56,7 @@ public class Main extends Application {
     private double startDragY;
     private final ParallelTransition pt = new ParallelTransition();
 
-    private RubikFROOK rubikFROOK = new RubikFROOK();
+    private final RubikFROOK rubikFROOK = new RubikFROOK();
     private boolean startSolving = true;
 
     private void setAnglesText(Text text){
@@ -87,24 +87,17 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
-//        Box something = new Box(5,5,5);
-//        something.setTranslateX(10);
-//        something.setTranslateY(10);
-//        something.setTranslateZ(-5d/2);
-//        something.setMaterial(new PhongMaterial(Color.RED));
-//        world.getChildren().add(something);
-
-//        notationQueue.add(Notation.R);
-        notationQueue.add(Notation.R_);
+        notationQueue.add(Notation.R);
+//        notationQueue.add(Notation.R_);
 //        notationQueue.add(Notation.L);
 //        notationQueue.add(Notation.L_);
-//        notationQueue.add(Notation.U);
+        notationQueue.add(Notation.U);
 //        notationQueue.add(Notation.U_);
 //        notationQueue.add(Notation.D);
 //        notationQueue.add(Notation.D_);
-//        notationQueue.add(Notation.F);
+        notationQueue.add(Notation.F);
 //        notationQueue.add(Notation.F_);
-//        notationQueue.add(Notation.B);
+        notationQueue.add(Notation.B);
 //        notationQueue.add(Notation.B_);
 
         startAnimation();
@@ -146,7 +139,7 @@ public class Main extends Application {
         if(notation==null){
             if(startSolving){
 //                rubikFROOK.mainSolving();
-                for(Cubelet cubelet: rubik.getSideY(1)){
+                for(Cubelet cubelet: rubik.getSideZ(1)){
                     cubelet.setMainBoxMaterial(new PhongMaterial(Color.GREEN));
                 }
 //                System.out.println(rubikFROOK.getSolution().toString());
@@ -157,6 +150,7 @@ public class Main extends Application {
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotation rotation = new Rotation(cubelet,notation);
             rotation.addListener(new Rotation.RotateListener(){
+                @Override
                 public void onAngleChanges(Rotate rotate,double oldAngle,double newAngle){
                     rotate.setAngle(newAngle-oldAngle);
                     Affine affine = cubelet.getAffine();
@@ -199,7 +193,7 @@ public class Main extends Application {
             rubikFROOK.call(notation.toString(),IsScramble);
         }
         catch(InvalidRubikNotation e){
-            System.out.println(e);
+            System.out.println(e.toString());
         }
     }
 
