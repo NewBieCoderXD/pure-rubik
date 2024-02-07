@@ -57,7 +57,7 @@ public class Main extends Application {
     private final ParallelTransition pt = new ParallelTransition();
 
     private final RubikFROOK rubikFROOK = new RubikFROOK();
-    private boolean startSolving = true;
+    private boolean startSolving = false;
 
     private void setAnglesText(Text text){
         text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXform.rz.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
@@ -137,13 +137,25 @@ public class Main extends Application {
         }
         Notation notation = notationQueue.poll();
         if(notation==null){
-            if(startSolving){
-//                rubikFROOK.mainSolving();
-                for(Cubelet cubelet: rubik.getSideZ(1)){
-                    cubelet.setMainBoxMaterial(new PhongMaterial(Color.GREEN));
-                }
-//                System.out.println(rubikFROOK.getSolution().toString());
+            startSolving=true;
+            if(!startSolving){
+                return;
             }
+            rubikFROOK.printRubik(rubikFROOK.getRubik());
+            rubikFROOK.mainSolving();
+            if(rubikFROOK.getSolution().isEmpty()){
+                return;
+            }
+            System.out.println(rubikFROOK.getSolution().toString());
+            for(String solutionNotation: rubikFROOK.getSolution()){
+                if(solutionNotation.length()==2){
+                    notationQueue.add(Notation.valueOf(solutionNotation.charAt(0)+"_"));
+                    continue;
+                }
+                notationQueue.add(Notation.valueOf(solutionNotation));
+            }
+            rubikFROOK.getSolution().clear();
+            startAnimation();
             return;
         }
         pt.getChildren().clear();
@@ -176,7 +188,7 @@ public class Main extends Application {
         pt.setOnFinished(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event){
-                callNotation(notation,true);
+                callNotation(notation, true);
                 startAnimation();
             }
         });
@@ -190,7 +202,9 @@ public class Main extends Application {
             }
             System.out.println(notation.toString());
             rubik.call(notation);
-            rubikFROOK.call(notation.toString(),IsScramble);
+            if(!startSolving) {
+                rubikFROOK.call(notation.toString(), IsScramble);
+            }
         }
         catch(InvalidRubikNotation e){
             System.out.println(e.toString());

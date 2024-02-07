@@ -600,7 +600,7 @@ public class RubikFROOK {
     return true;
   }
   
-  private boolean checkCross(){
+  public boolean checkCross(){
     for(int i=1;i<8;i+=2){ //cross
       if(rubik[5][i]!=5){
         return false;
@@ -766,7 +766,7 @@ public class RubikFROOK {
       System.out.println("Internal Error, please report a bug");
     }
   }
-  protected void printRubik(int[][] rubik){
+  public void printRubik(int[][] rubik){
     System.out.println("      "+rubik[1][2]+" "+rubik[1][3]+" "+rubik[1][4]);
     System.out.println("      "+rubik[1][1]+" 1 "+rubik[1][5]);
     System.out.println("      "+rubik[1][0]+" "+rubik[1][7]+" "+rubik[1][6]);

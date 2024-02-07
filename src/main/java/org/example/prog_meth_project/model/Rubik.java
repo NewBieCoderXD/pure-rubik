@@ -10,7 +10,6 @@ import org.example.prog_meth_project.rendering.Axis;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-
 import static org.example.prog_meth_project.Config.*;
 import com.ggFROOK.RubikFROOK;
 public class Rubik extends Group {
@@ -140,46 +139,45 @@ public class Rubik extends Group {
         swapRubikMatrix(sourceX,sourceY,sourceZ,targetX,targetY,targetZ);
     }
     private void swapCorners(Notation notation){
-        Map.Entry<Integer,Integer>[] allCornersClockwise=new Map.Entry[]{
+
+        final Map.Entry<Integer,Integer>[] allCornersSequentially=new Map.Entry[]{
                 Map.entry(0,0),
                 Map.entry(0, 2),
                 Map.entry(2, 2),
                 Map.entry(2, 0),
         };
-        swapThreeTimes(notation,allCornersClockwise);
+        swapThreeTimes(notation,allCornersSequentially);
     }
 
-    private void swapThreeTimes(Notation notation,Map.Entry<Integer,Integer>[] clockwiseOrder){
-        // swap three times
-        boolean swapClockwise=!notation.IsInverted;
-        // clockwise order isn't the same for Y axis
-        swapClockwise=swapClockwise==(notation.axis==Axis.Y_AXIS);
-        // clockwise order isn't the same for rotating different direction
-        swapClockwise=swapClockwise==(notation.direction==-1);
-
-        if(swapClockwise){
-            //anti clockwise
-            for (int i = 0; i < 3; i++) {
-                swapFromNotation(notation, clockwiseOrder[i], clockwiseOrder[i + 1]);
-            }
-        }
-        else{
-            //clockwise
-            for (int i = 3; i >= 1; i--) {
-                swapFromNotation(notation, clockwiseOrder[i], clockwiseOrder[i - 1]);
-            }
-        }
-    }
 
     private void swapEdges(Notation notation){
-        Map.Entry<Integer,Integer>[] allEdgesClockwise=new Map.Entry[]{
+        final Map.Entry<Integer,Integer>[] allEdgesSequentially=new Map.Entry[]{
                 Map.entry(0,1),
                 Map.entry(1,2),
                 Map.entry(2,1),
                 Map.entry(1,0),
         };
-        swapThreeTimes(notation, allEdgesClockwise);
+        swapThreeTimes(notation, allEdgesSequentially);
     }
+
+    private void swapThreeTimes(Notation notation,Map.Entry<Integer,Integer>[] sequentialOrder){
+        // Y axis isn't sequential
+        boolean isSequential=!notation.IsInverted==(notation.axis==Axis.Y_AXIS)==(notation.direction==-1);
+
+        if(isSequential){
+            //anti clockwise
+            for (int i = 0; i < 3; i++) {
+                swapFromNotation(notation, sequentialOrder[i], sequentialOrder[i + 1]);
+            }
+        }
+        else{
+            //clockwise
+            for (int i = 3; i >= 1; i--) {
+                swapFromNotation(notation, sequentialOrder[i], sequentialOrder[i - 1]);
+            }
+        }
+    }
+
 
     public void call(Notation notation){
         swapCorners(notation);
