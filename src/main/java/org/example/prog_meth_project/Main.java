@@ -100,7 +100,7 @@ public class Main extends Application {
         root.getChildren().add(emptyRegion);
         VBox.setVgrow(emptyRegion, Priority.ALWAYS);
 
-        VBox notationMenu = buildMenus();
+        GridPane notationMenu = buildMenus();
         root.getChildren().add(notationMenu);
 
 //        stage.setFullScreen(true);
@@ -144,31 +144,50 @@ public class Main extends Application {
             }
         });
     }
+    private Button buildSolveButton(){
+        Button button = new Button("solve");
+        button.setFont(new Font(26));
+        double buttonWidth = 70;
+        double buttonHeight = 140;
+        button.setPrefWidth(buttonHeight);
+        button.setPrefHeight(buttonWidth);
+        button.getTransforms().add(new Rotate(-90));
+        button.setTranslateX(buttonWidth);
+        button.setTranslateY(buttonHeight);
 
-    public VBox buildMenus(){
-        VBox notationMenus = new VBox();
-        notationMenus.setAlignment(Pos.CENTER);
-        notationMenus.setPrefWidth(root.getPrefWidth());
-
-        GridPane nonInvertedMenu = buildMenu(false);
-        GridPane invertedMenu = buildMenu(true);
-        notationMenus.getChildren().addAll(nonInvertedMenu,invertedMenu);
-        return notationMenus;
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                startSolving=true;
+                startAnimation();
+            }
+        });
+        return button;
     }
 
-    private GridPane buildMenu(boolean isInverted){
+    public GridPane buildMenus(){
+//        VBox notationMenus = new VBox();
+//        notationMenus.setAlignment(Pos.CENTER);
+//        notationMenus.setPrefWidth(root.getPrefWidth());
+//
+//        GridPane nonInvertedMenu = buildMenu(false);
+//        GridPane invertedMenu = buildMenu(true);
         GridPane menu = new GridPane();
+        menu.setPrefWidth(root.getPrefWidth());
+        Button solveButton = buildSolveButton();
+        menu.add(solveButton,0,0,1,2);
+        buildMenu(menu);
+        return menu;
+    }
+
+    private void buildMenu(GridPane menu){
         menu.setAlignment(Pos.CENTER);
         menu.setPadding(new Insets(0,50,0,50));
         for(int i=0;i<Notation.values().length;i++) {
             Notation notation = Notation.values()[i];
-            if(notation.isInverted!=isInverted){
-                continue;
-            }
-            menu.add(notationButton(notation), i, 0);
+            Button notationButton = notationButton(notation);
+            menu.add(notationButton, i/2+1, notation.isInverted? 3:0);
         }
-        menu.setPrefWidth(root.getPrefWidth());
-        return menu;
     }
 
     public Button notationButton(Notation notation){
@@ -188,6 +207,7 @@ public class Main extends Application {
 
     private void buildRubik() {
         rubik = new Rubik();
+        rubikFROOK.initRubik();
         world.getChildren().add(rubik);
     }
 
@@ -201,6 +221,7 @@ public class Main extends Application {
             if(!startSolving){
                 return;
             }
+            startSolving=false;
             rubikFROOK.printRubik(rubikFROOK.getRubik());
             rubikFROOK.mainSolving();
             if(rubikFROOK.getSolution().isEmpty()){
@@ -257,9 +278,6 @@ public class Main extends Application {
 
     private void callNotation(Notation notation, boolean IsScramble){
         try{
-            if(rubikFROOK.getRubik()==null){
-                rubikFROOK.initRubik();
-            }
             System.out.println(notation.toString());
             rubik.call(notation);
             if(!startSolving) {
