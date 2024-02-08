@@ -14,11 +14,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -28,7 +28,6 @@ import org.example.prog_meth_project.rendering.Rotation;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -101,7 +100,7 @@ public class Main extends Application {
         root.getChildren().add(emptyRegion);
         VBox.setVgrow(emptyRegion, Priority.ALWAYS);
 
-        VBox notationMenu = buildMenu();
+        VBox notationMenu = buildMenus();
         root.getChildren().add(notationMenu);
 
 //        stage.setFullScreen(true);
@@ -146,24 +145,44 @@ public class Main extends Application {
         });
     }
 
-    public VBox buildMenu(){
-        VBox menu = new VBox();
-        menu.setAlignment(Pos.CENTER);
-        menu.setPrefWidth(root.getPrefWidth());
+    public VBox buildMenus(){
+        VBox notationMenus = new VBox();
+        notationMenus.setAlignment(Pos.CENTER);
+        notationMenus.setPrefWidth(root.getPrefWidth());
 
-        GridPane nonInvertedMenu = new GridPane();
-        nonInvertedMenu.setAlignment(Pos.CENTER);
-        nonInvertedMenu.setPadding(new Insets(0,50,0,50));
+        GridPane nonInvertedMenu = buildMenu(false);
+        GridPane invertedMenu = buildMenu(true);
+        notationMenus.getChildren().addAll(nonInvertedMenu,invertedMenu);
+        return notationMenus;
+    }
+
+    private GridPane buildMenu(boolean isInverted){
+        GridPane menu = new GridPane();
+        menu.setAlignment(Pos.CENTER);
+        menu.setPadding(new Insets(0,50,0,50));
         for(int i=0;i<Notation.values().length;i++) {
-            nonInvertedMenu.add(notationButton(Notation.values()[i]), i, 0);
+            Notation notation = Notation.values()[i];
+            if(notation.isInverted!=isInverted){
+                continue;
+            }
+            menu.add(notationButton(notation), i, 0);
         }
-        nonInvertedMenu.setPrefWidth(root.getPrefWidth());
-        menu.getChildren().add(nonInvertedMenu);
+        menu.setPrefWidth(root.getPrefWidth());
         return menu;
     }
 
     public Button notationButton(Notation notation){
-        Button button = new Button(notation.toString());
+        Button button = new Button(notation.toPrettyString());
+        button.setFont(new Font(26));
+        button.setPrefWidth(70);
+        button.setPrefHeight(70);
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                notationQueue.add(notation);
+                startAnimation();
+            }
+        });
         return button;
     }
 
@@ -211,7 +230,7 @@ public class Main extends Application {
                 }
             });
             int sign = 1;
-            if(notation.IsInverted){
+            if(notation.isInverted){
                sign=-1;
             }
             sign*=notation.direction;

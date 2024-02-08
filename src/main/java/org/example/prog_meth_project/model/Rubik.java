@@ -2,8 +2,6 @@ package org.example.prog_meth_project.model;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import org.example.prog_meth_project.Notation;
 import org.example.prog_meth_project.rendering.Axis;
 
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import static org.example.prog_meth_project.Config.*;
-import com.ggFROOK.RubikFROOK;
+
 public class Rubik extends Group {
     private final ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix;
 
@@ -162,7 +160,7 @@ public class Rubik extends Group {
 
     private void swapThreeTimes(Notation notation,Map.Entry<Integer,Integer>[] sequentialOrder){
         // Y axis isn't sequential
-        boolean isSequential=!notation.IsInverted==(notation.axis==Axis.Y_AXIS)==(notation.direction==-1);
+        boolean isSequential=!notation.isInverted ==(notation.axis==Axis.Y_AXIS)==(notation.direction==-1);
 
         if(isSequential){
             //anti clockwise

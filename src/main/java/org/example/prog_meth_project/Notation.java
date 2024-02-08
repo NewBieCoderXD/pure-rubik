@@ -16,13 +16,18 @@ public enum Notation {
     D(false,Axis.Z_AXIS,1),
     D_(true,Axis.Z_AXIS,1);
 
-    public final boolean IsInverted;
+    public final boolean isInverted;
     public final Axis axis;
     public final int direction;
-    Notation(boolean IsInverted, Axis axis, int direction) {
-        this.IsInverted=IsInverted;
+    Notation(boolean isInverted, Axis axis, int direction) {
+        this.isInverted = isInverted;
         this.axis=axis;
         this.direction=direction;
     }
-
+    public String toPrettyString(){
+        if(isInverted){
+            return this.toString().charAt(0)+"'";
+        }
+        return this.toString();
+    }
 }
