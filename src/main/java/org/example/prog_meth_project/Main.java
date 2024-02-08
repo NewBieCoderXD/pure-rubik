@@ -4,6 +4,7 @@ import com.ggFROOK.InvalidRubikNotation;
 import com.ggFROOK.RubikFROOK;
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
@@ -30,6 +31,8 @@ import org.example.prog_meth_project.rendering.Xform;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayDeque;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Queue;
 
 import static org.example.prog_meth_project.Config.*;
@@ -44,11 +47,11 @@ public class Main extends Application {
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
     private Rubik rubik;
-    private Queue<Notation> notationQueue = new ArrayDeque<>();
+    private Queue<Notation> notationQueue = new LinkedList<>();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
-    private static final double CAMERA_INITIAL_X_ANGLE = -52;
-    private static final double CAMERA_INITIAL_Y_ANGLE = -184;
-    private static final double CAMERA_INITIAL_Z_ANGLE = 138;
+    private static final double CAMERA_INITIAL_X_ANGLE = -45;
+    private static final double CAMERA_INITIAL_Y_ANGLE = 180;
+    private static final double CAMERA_INITIAL_Z_ANGLE = 135;
     private static final double CAMERA_NEAR_CLIP = 0.01;
     private static final double CAMERA_FAR_CLIP = 10000.0;
 
@@ -60,7 +63,7 @@ public class Main extends Application {
     private boolean startSolving = false;
 
     private void setAnglesText(Text text){
-        text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", cameraXform.rz.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
+        text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", cameraXform.rx.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
     }
 
     private SubScene build3DSubScene(double width, double height){
@@ -82,6 +85,8 @@ public class Main extends Application {
         return anglesText;
     }
 
+    private GridPane solutionStack;
+
     @Override
     public void start(Stage stage) throws IOException {
         Screen screen = Screen.getPrimary();
@@ -95,6 +100,10 @@ public class Main extends Application {
         Scene scene = new Scene(new StackPane(subScene, root), bounds.getWidth(), bounds.getHeight());
 
         Text anglesText = buildAnglesText();
+
+        solutionStack = buildSolutionStack();
+//        updateSolutionStack("R");
+        root.getChildren().add(solutionStack);
 
         Region emptyRegion = new Region();
         root.getChildren().add(emptyRegion);
@@ -144,13 +153,40 @@ public class Main extends Application {
             }
         });
     }
+    private GridPane buildSolutionStack(){
+        GridPane solutionStack = new GridPane();
+        for(int i=0;i<5;i++){
+            Text text = new Text("");
+            text.setFont(new Font(26));
+
+            solutionStack.add(text,0,i);
+        }
+        return solutionStack;
+    }
+    private void updateSolutionStack(Notation notation){
+        ObservableList<Node> stackNodes = solutionStack.getChildren();
+        ((Text) stackNodes.get(4)).setText(((Text) stackNodes.get(3)).getText());
+        ((Text) stackNodes.get(3)).setText(((Text) stackNodes.get(2)).getText());
+        ((Text) stackNodes.get(2)).setText(notation.toPrettyString());
+        Iterator<Notation> currentStackNode = notationQueue.iterator();
+        for(int i=1;i>=0;i--){
+            if(currentStackNode.hasNext()){
+                Notation currentNotation = currentStackNode.next();
+                ((Text) stackNodes.get(i)).setText(currentNotation.toPrettyString());
+                continue;
+            }
+            ((Text) stackNodes.get(i)).setText("");
+        }
+    }
     private Button buildSolveButton(){
         Button button = new Button("solve");
-        button.setFont(new Font(26));
+        button.setFont(new Font(35));
+        button.setAlignment(Pos.CENTER);
         double buttonWidth = 70;
         double buttonHeight = 140;
         button.setPrefWidth(buttonHeight);
         button.setPrefHeight(buttonWidth);
+        // rotate button
         button.getTransforms().add(new Rotate(-90));
         button.setTranslateX(buttonWidth);
         button.setTranslateY(buttonHeight);
@@ -239,6 +275,7 @@ public class Main extends Application {
             startAnimation();
             return;
         }
+        updateSolutionStack(notation);
         pt.getChildren().clear();
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotation rotation = new Rotation(cubelet,notation);
