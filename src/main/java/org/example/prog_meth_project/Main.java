@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.model.Rubik;
+import org.example.prog_meth_project.pane.NotationStack;
 import org.example.prog_meth_project.rendering.Rotation;
 import org.example.prog_meth_project.rendering.Xform;
 
@@ -61,6 +62,7 @@ public class Main extends Application {
 
     private final RubikFROOK rubikFROOK = new RubikFROOK();
     private boolean startSolving = false;
+    private NotationStack notationStack;
 
     private void setAnglesText(Text text){
         text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", cameraXform.rx.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
@@ -85,7 +87,6 @@ public class Main extends Application {
         return anglesText;
     }
 
-    private GridPane solutionStack;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -101,13 +102,17 @@ public class Main extends Application {
 
         Text anglesText = buildAnglesText();
 
-        solutionStack = buildSolutionStack();
-//        updateSolutionStack("R");
-        root.getChildren().add(solutionStack);
+        Region emptyRegion1 = new Region();
+        VBox.setVgrow(emptyRegion1, Priority.ALWAYS);
+        root.getChildren().add(emptyRegion1);
+
+//        notationStack = buildnotationStack();
+        notationStack = new NotationStack();
+        root.getChildren().add(notationStack);
 
         Region emptyRegion = new Region();
-        root.getChildren().add(emptyRegion);
         VBox.setVgrow(emptyRegion, Priority.ALWAYS);
+        root.getChildren().add(emptyRegion);
 
         GridPane notationMenu = buildMenus();
         root.getChildren().add(notationMenu);
@@ -153,31 +158,7 @@ public class Main extends Application {
             }
         });
     }
-    private GridPane buildSolutionStack(){
-        GridPane solutionStack = new GridPane();
-        for(int i=0;i<5;i++){
-            Text text = new Text("");
-            text.setFont(new Font(26));
 
-            solutionStack.add(text,0,i);
-        }
-        return solutionStack;
-    }
-    private void updateSolutionStack(Notation notation){
-        ObservableList<Node> stackNodes = solutionStack.getChildren();
-        ((Text) stackNodes.get(4)).setText(((Text) stackNodes.get(3)).getText());
-        ((Text) stackNodes.get(3)).setText(((Text) stackNodes.get(2)).getText());
-        ((Text) stackNodes.get(2)).setText(notation.toPrettyString());
-        Iterator<Notation> currentStackNode = notationQueue.iterator();
-        for(int i=1;i>=0;i--){
-            if(currentStackNode.hasNext()){
-                Notation currentNotation = currentStackNode.next();
-                ((Text) stackNodes.get(i)).setText(currentNotation.toPrettyString());
-                continue;
-            }
-            ((Text) stackNodes.get(i)).setText("");
-        }
-    }
     private Button buildSolveButton(){
         Button button = new Button("solve");
         button.setFont(new Font(35));
@@ -275,7 +256,7 @@ public class Main extends Application {
             startAnimation();
             return;
         }
-        updateSolutionStack(notation);
+        notationStack.update(notation,notationQueue);
         pt.getChildren().clear();
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotation rotation = new Rotation(cubelet,notation);
