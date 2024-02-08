@@ -6,15 +6,16 @@ import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point3D;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.*;
 import javafx.scene.*;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -35,7 +36,7 @@ import java.util.Queue;
 import static org.example.prog_meth_project.Config.*;
 
 public class Main extends Application {
-    final Group root = new Group();
+    final VBox root = new VBox();
     final Xform world = new Xform();
     private static final double AXIS_LENGTH = 250.0;
     final Xform axisGroup = new Xform();
@@ -60,26 +61,48 @@ public class Main extends Application {
     private boolean startSolving = false;
 
     private void setAnglesText(Text text){
-        text.setText(MessageFormat.format("\nx: {0}\ny: {1}\nz:{2}", cameraXform.rz.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
+        text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", cameraXform.rz.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
     }
 
-    @Override
-    public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
-
-        Screen screen = Screen.getPrimary();
-        Rectangle2D bounds = screen.getVisualBounds();
-        SubScene subScene = new SubScene(new Group(world), bounds.getWidth(), bounds.getHeight(), true, SceneAntialiasing.BALANCED);
+    private SubScene build3DSubScene(double width, double height){
+        SubScene subScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         subScene.setDepthTest(DepthTest.ENABLE);
         buildCamera();
         buildAxes();
         buildRubik();
         subScene.setCamera(camera);
-        Scene scene = new Scene(new Group(subScene, root), bounds.getWidth(), bounds.getHeight());
+        return subScene;
+    }
 
-        Text text = new Text();
-        setAnglesText(text);
-        root.getChildren().add(text);
+    private Text buildAnglesText(){
+        Text anglesText = new Text();
+        anglesText.setTextAlignment(TextAlignment.LEFT);
+        anglesText.setWrappingWidth(root.getPrefWidth());
+        setAnglesText(anglesText);
+        root.getChildren().add(anglesText);
+        return anglesText;
+    }
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        SubScene subScene=build3DSubScene(bounds.getWidth(), bounds.getHeight());
+
+        root.setPrefWidth(bounds.getWidth());
+        root.setPrefHeight(bounds.getHeight());
+
+        Scene scene = new Scene(new StackPane(subScene, root), bounds.getWidth(), bounds.getHeight());
+
+        Text anglesText = buildAnglesText();
+
+        Region emptyRegion = new Region();
+        root.getChildren().add(emptyRegion);
+        VBox.setVgrow(emptyRegion, Priority.ALWAYS);
+
+        VBox notationMenu = buildMenu();
+        root.getChildren().add(notationMenu);
 
 //        stage.setFullScreen(true);
         stage.setMaximized(true);
@@ -87,23 +110,20 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
-        notationQueue.add(Notation.R);
+//        notationQueue.add(Notation.R);
 //        notationQueue.add(Notation.R_);
 //        notationQueue.add(Notation.L);
-        notationQueue.add(Notation.L_);
-        notationQueue.add(Notation.U);
+//        notationQueue.add(Notation.L_);
+//        notationQueue.add(Notation.U);
 //        notationQueue.add(Notation.U_);
-        notationQueue.add(Notation.D);
+//        notationQueue.add(Notation.D);
 //        notationQueue.add(Notation.D_);
-        notationQueue.add(Notation.F);
+//        notationQueue.add(Notation.F);
 //        notationQueue.add(Notation.F_);
-        notationQueue.add(Notation.B);
+//        notationQueue.add(Notation.B);
 //        notationQueue.add(Notation.B_);
 
         startAnimation();
-
-//        System.out.println(rubikFROOK.mainSolving());
-        // not work because called instantly
 
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -121,9 +141,30 @@ public class Main extends Application {
                 startDragY = event.getSceneY();
                 cameraXform.rz.setAngle(cameraXform.rz.getAngle() - xDistance * DRAG_SENSITIVITY);
                 cameraXform.rx.setAngle(cameraXform.rx.getAngle() + yDistance * DRAG_SENSITIVITY);
-                setAnglesText(text);
+                setAnglesText(anglesText);
             }
         });
+    }
+
+    public VBox buildMenu(){
+        VBox menu = new VBox();
+        menu.setAlignment(Pos.CENTER);
+        menu.setPrefWidth(root.getPrefWidth());
+
+        GridPane nonInvertedMenu = new GridPane();
+        nonInvertedMenu.setAlignment(Pos.CENTER);
+        nonInvertedMenu.setPadding(new Insets(0,50,0,50));
+        for(int i=0;i<Notation.values().length;i++) {
+            nonInvertedMenu.add(notationButton(Notation.values()[i]), i, 0);
+        }
+        nonInvertedMenu.setPrefWidth(root.getPrefWidth());
+        menu.getChildren().add(nonInvertedMenu);
+        return menu;
+    }
+
+    public Button notationButton(Notation notation){
+        Button button = new Button(notation.toString());
+        return button;
     }
 
     private void buildRubik() {
@@ -137,7 +178,7 @@ public class Main extends Application {
         }
         Notation notation = notationQueue.poll();
         if(notation==null){
-            startSolving=true;
+//            startSolving=true;
             if(!startSolving){
                 return;
             }

@@ -14,5 +14,5 @@ public class Config {
 
     public static final double CUBELET_GROWING_RATIO_VERTICAL= 2.6;
     public static final double CUBELET_GROWING_RATIO_HORIZONTAL= 1.5;
-    public static final double SECOND_PER_NOTATION = 0.05;
+    public static final double SECOND_PER_NOTATION = 0.5;
 }
