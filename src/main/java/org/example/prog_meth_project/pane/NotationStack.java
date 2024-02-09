@@ -1,5 +1,6 @@
 package org.example.prog_meth_project.pane;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -10,17 +11,25 @@ import org.example.prog_meth_project.Notation;
 import java.util.Iterator;
 import java.util.Queue;
 
-public class NotationStack extends GridPane {
+public class NotationStack extends VBox {
     public NotationStack(){
+        this.setMaxSize(VBox.USE_PREF_SIZE, VBox.USE_PREF_SIZE);
+
         for(int i=0;i<5;i++){
             Text text = new Text("");
             text.setFont(new Font(26));
             HBox wrappingBox = new HBox(text);
+            double size = 42;
+            if(i==2){
+                size*=1.5;
+            }
             text.setTextAlignment(TextAlignment.CENTER);
-            text.setWrappingWidth(42);
+            text.setWrappingWidth(size);
             text.setLineSpacing(0);
-            wrappingBox.setPrefWidth(42);
-            wrappingBox.setPrefHeight(42);
+            wrappingBox.setPrefWidth(size);
+            wrappingBox.setPrefHeight(size);
+            wrappingBox.setAlignment(Pos.CENTER);
+            wrappingBox.setMaxSize(VBox.USE_PREF_SIZE, VBox.USE_PREF_SIZE);
             wrappingBox.setBackground(
                 new Background(
                     new BackgroundFill(
@@ -36,11 +45,11 @@ public class NotationStack extends GridPane {
                         Color.BLACK,
                         BorderStrokeStyle.SOLID,
                         null,
-                        new BorderWidths(i==0?2:0,2,2,2)
+                        new BorderWidths((i==0||i==2)?2:0,2,(i==1)?0:2,2)
                     )
                 )
             );
-            super.add(wrappingBox,0,i);
+            super.getChildren().add(wrappingBox);
         }
     }
     public Text getNodeText(int index){
