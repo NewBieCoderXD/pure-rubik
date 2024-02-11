@@ -4,10 +4,11 @@ import com.ggFROOK.InvalidRubikNotation;
 import com.ggFROOK.RubikFROOK;
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -29,14 +30,12 @@ import org.example.prog_meth_project.pane.NotationStack;
 import org.example.prog_meth_project.rendering.Rotation;
 import org.example.prog_meth_project.rendering.Xform;
 
-import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.ArrayDeque;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import static org.example.prog_meth_project.Config.*;
+import static org.example.prog_meth_project.Config.DRAG_SENSITIVITY;
+import static org.example.prog_meth_project.Config.SECOND_PER_NOTATION;
 
 public class Main extends Application {
     final VBox root = new VBox();
@@ -48,7 +47,7 @@ public class Main extends Application {
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
     private Rubik rubik;
-    private Queue<Notation> notationQueue = new LinkedList<>();
+    private final Queue<Notation> notationQueue = new LinkedList<>();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
     private static final double CAMERA_INITIAL_X_ANGLE = -45;
     private static final double CAMERA_INITIAL_Y_ANGLE = 180;
@@ -62,6 +61,7 @@ public class Main extends Application {
 
     private final RubikFROOK rubikFROOK = new RubikFROOK();
     private boolean startSolving = false;
+    private boolean isSolving = false;
     private NotationStack notationStack;
 
     private void setAnglesText(Text text){
@@ -89,7 +89,7 @@ public class Main extends Application {
 
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
@@ -106,18 +106,16 @@ public class Main extends Application {
         VBox.setVgrow(emptyRegion1, Priority.ALWAYS);
         root.getChildren().add(emptyRegion1);
 
-//        notationStack = buildnotationStack();
         notationStack = new NotationStack();
         root.getChildren().add(notationStack);
 
-        Region emptyRegion = new Region();
-        VBox.setVgrow(emptyRegion, Priority.ALWAYS);
-        root.getChildren().add(emptyRegion);
+        Region emptyRegion2 = new Region();
+        VBox.setVgrow(emptyRegion2, Priority.ALWAYS);
+        root.getChildren().add(emptyRegion2);
 
         GridPane notationMenu = buildMenus();
         root.getChildren().add(notationMenu);
 
-//        stage.setFullScreen(true);
         stage.setMaximized(true);
         stage.setTitle("Hello!");
         stage.setScene(scene);
@@ -235,10 +233,12 @@ public class Main extends Application {
         Notation notation = notationQueue.poll();
         if(notation==null){
             if(!startSolving){
+                isSolving=false;
                 return;
             }
             startSolving=false;
-            rubikFROOK.printRubik(rubikFROOK.getRubik());
+            isSolving=true;
+//            rubikFROOK.printRubik(rubikFROOK.getRubik());
             rubikFROOK.mainSolving();
             if(rubikFROOK.getSolution().isEmpty()){
                 return;
@@ -287,19 +287,19 @@ public class Main extends Application {
         pt.setOnFinished(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event){
-                callNotation(notation, true);
+                callNotation(notation);
                 startAnimation();
             }
         });
         pt.play();
     }
 
-    private void callNotation(Notation notation, boolean IsScramble){
+    private void callNotation(Notation notation){
         try{
             System.out.println(notation.toString());
             rubik.call(notation);
-            if(!startSolving) {
-                rubikFROOK.call(notation.toString(), IsScramble);
+            if(!isSolving) {
+                rubikFROOK.call(notation.toString(), true);
             }
         }
         catch(InvalidRubikNotation e){
