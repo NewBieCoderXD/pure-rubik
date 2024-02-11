@@ -123,6 +123,12 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
+        for(int i=0;i<100;i++){
+            notationQueue.add(Notation.R);
+            notationQueue.add(Notation.R);
+            notationQueue.add(Notation.F);
+            notationQueue.add(Notation.F);
+        }
 //        notationQueue.add(Notation.R);
 //        notationQueue.add(Notation.R_);
 //        notationQueue.add(Notation.L);
@@ -161,7 +167,7 @@ public class Main extends Application {
 
     private Button buildSolveButton(){
         Button button = new Button("solve");
-        button.setFont(new Font(35));
+        button.setFont(new Font(30));
         button.setAlignment(Pos.CENTER);
         double buttonWidth = 70;
         double buttonHeight = 140;
@@ -183,13 +189,8 @@ public class Main extends Application {
     }
 
     public GridPane buildMenus(){
-//        VBox notationMenus = new VBox();
-//        notationMenus.setAlignment(Pos.CENTER);
-//        notationMenus.setPrefWidth(root.getPrefWidth());
-//
-//        GridPane nonInvertedMenu = buildMenu(false);
-//        GridPane invertedMenu = buildMenu(true);
         GridPane menu = new GridPane();
+        menu.setAlignment(Pos.CENTER);
         menu.setPrefWidth(root.getPrefWidth());
         Button solveButton = buildSolveButton();
         menu.add(solveButton,0,0,1,2);
@@ -198,8 +199,6 @@ public class Main extends Application {
     }
 
     private void buildMenu(GridPane menu){
-        menu.setAlignment(Pos.CENTER);
-        menu.setPadding(new Insets(0,50,0,50));
         for(int i=0;i<Notation.values().length;i++) {
             Notation notation = Notation.values()[i];
             Button notationButton = notationButton(notation);
@@ -212,6 +211,7 @@ public class Main extends Application {
         button.setFont(new Font(26));
         button.setPrefWidth(70);
         button.setPrefHeight(70);
+
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -234,7 +234,6 @@ public class Main extends Application {
         }
         Notation notation = notationQueue.poll();
         if(notation==null){
-//            startSolving=true;
             if(!startSolving){
                 return;
             }
@@ -258,6 +257,7 @@ public class Main extends Application {
         }
         notationStack.update(notation,notationQueue);
         pt.getChildren().clear();
+//        System.out.println(rubik.getChildren().get(0).toString()+" "+notation.toPrettyString()+" "+rubik.getChildren().get(0).localToScene(new Point3D(0,0,0)));
         for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
             Rotation rotation = new Rotation(cubelet,notation);
             rotation.addListener(new Rotation.RotateListener(){

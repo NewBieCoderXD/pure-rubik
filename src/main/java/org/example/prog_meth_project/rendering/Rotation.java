@@ -1,6 +1,7 @@
 package org.example.prog_meth_project.rendering;
 
 import javafx.beans.value.WritableValue;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.transform.Rotate;
 import org.example.prog_meth_project.Notation;
@@ -28,7 +29,7 @@ public class Rotation implements WritableValue<Double> {
     private final ArrayList<RotateListener> listeners = new ArrayList<>();
     public Rotation(Cubelet cubelet, Notation notation){
         rotate=new Rotate();
-        Point3D origin = cubelet.parentToLocal(new Point3D(0,0,0));
+        Point3D origin = cubelet.sceneToLocal(new Point3D(0,0,0));
         rotate.setPivotX(origin.getX());
         rotate.setPivotY(origin.getY());
         rotate.setPivotZ(origin.getZ());
