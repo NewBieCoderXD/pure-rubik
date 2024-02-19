@@ -234,25 +234,23 @@ public class Main extends Application {
             if(isPTRunning){
                 continue;
             }
-            Notation currentNotation = notationQueue.poll();
-            if(currentNotation==null){
+            if(notationQueue.isEmpty()){
+                // if it is empty that mean either 1.done all scrambles or 2.done solving
+                // either way, isSolving should be set to false
                 isSolving=false;
+                // if solving button is just pressed, set isSolving to true
                 if(startSolving){
                     isSolving=true;
                     startSolving=false;
                     rubikFROOK.mainSolving();
                     for(String notationString: rubikFROOK.getSolution()){
-                        if(notationString.length()==2){
-                            notationQueue.add(Notation.valueOf(notationString.charAt(0)+"_"));
-                            continue;
-                        }
-                        notationQueue.add(Notation.valueOf(notationString));
+                        notationQueue.add(Notation.stringToNotation(notationString));
                     }
-                    rubikFROOK.getSolution().clear();
                 }
                 continue;
             }
 
+            Notation currentNotation = notationQueue.poll();
             isPTRunning=true;
             ArrayList<Cubelet> cubelets = rubik.getSideOfNotation(currentNotation);
             for (Cubelet cubelet : cubelets) {
@@ -278,6 +276,7 @@ public class Main extends Application {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     callNotation(currentNotation);
+                    notationStack.update(currentNotation,notationQueue);
                     pt.getChildren().clear();
                     isPTRunning=false;
                 }

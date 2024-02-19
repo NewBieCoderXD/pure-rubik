@@ -659,6 +659,7 @@ public class RubikFROOK {
   }
 
   public ArrayList<String> mainSolving(){
+    solution.clear();
     try{
       solve();
     }

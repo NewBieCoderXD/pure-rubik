@@ -30,4 +30,10 @@ public enum Notation {
         }
         return this.toString();
     }
+    public static Notation stringToNotation(String notationString){
+        if(notationString.length()==2){
+            return Notation.valueOf(notationString.charAt(0)+"_");
+        }
+        return Notation.valueOf(notationString);
+    }
 }
