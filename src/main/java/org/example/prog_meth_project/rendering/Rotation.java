@@ -23,22 +23,23 @@ public class Rotation implements WritableValue<Double> {
     }
 
     public interface RotateListener{
-        public void onAngleChanges(Rotate rotate,double oldAngle,double newAngle);
+        public void onAngleChanges(Cubelet cubelet, Rotate rotate,double oldAngle,double newAngle);
     }
-    private Rotate rotate;
-    private double angle;
+    private final Rotate rotate;
+    private double angle=0;
+    private final Cubelet cubelet;
     private final ArrayList<RotateListener> listeners = new ArrayList<>();
     public Rotation(Cubelet cubelet, Notation notation){
-        Point3D origin = cubelet.parentToLocal(0,0,0);
-
+        Bounds translate = cubelet.getBoundsInParent();
         rotate=new Rotate(0);
-        rotate.setPivotX(origin.getX());
-        rotate.setPivotY(origin.getY());
-        rotate.setPivotZ(origin.getZ());
+        rotate.setPivotX(-cubelet.getTranslateX());
+        rotate.setPivotY(-cubelet.getTranslateY());
+        rotate.setPivotZ(-cubelet.getTranslateZ());
         rotate.setAxis(notation.axis.toPoint3D());
+        this.cubelet=cubelet;
         this.addListener(new Rotation.RotateListener(){
             @Override
-            public void onAngleChanges(Rotate rotate,double oldAngle,double newAngle){
+            public void onAngleChanges(Cubelet cubelet, Rotate rotate,double oldAngle,double newAngle){
                 rotate.setAngle(newAngle-oldAngle);
                 Affine affine = cubelet.getAffine();
                 affine.prepend(rotate);
@@ -50,8 +51,8 @@ public class Rotation implements WritableValue<Double> {
     }
     public void setAngle(double newAngle){
         for(RotateListener listener: listeners){
-            listener.onAngleChanges(rotate,angle,newAngle);
+            listener.onAngleChanges(cubelet,rotate,angle,newAngle);
         }
-        angle=newAngle;
+        this.angle=newAngle;
     }
 }

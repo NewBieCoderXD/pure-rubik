@@ -126,9 +126,9 @@ public class Main extends Application {
 
         for(int i=0;i<100;i++){
             notationQueue.add(Notation.R);
-            notationQueue.add(Notation.R);
-            notationQueue.add(Notation.F);
-            notationQueue.add(Notation.F);
+//            notationQueue.add(Notation.R);
+//            notationQueue.add(Notation.F);
+//            notationQueue.add(Notation.F);
         }
 //        notationQueue.add(Notation.R);
 //        notationQueue.add(Notation.R_);
@@ -238,6 +238,7 @@ public class Main extends Application {
             if(currentNotation==null){
                 continue;
             }
+//            System.out.println("starting "+currentNotation.toPrettyString());
             ArrayList<Cubelet> cubelets = rubik.getSideOfNotation(currentNotation);
             ArrayList<Point3D> resultPoints = new ArrayList<>(9);
             for(int i=0;i<cubelets.size();i++){
@@ -272,13 +273,13 @@ public class Main extends Application {
             pt.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    Point3D pivot = rubik.getObjectMatrix().get(0).get(0).get(0).sceneToLocal(0,0,0);
-                    System.out.println(pivot.toString());
-                    for(int i=0;i<9;i++){
-                        if(rubik.getObjectMatrix().get(0).get(0).get(0).hashCode()==cubelets.get(i).hashCode()){
-                            System.out.println("expected point: "+resultPoints.get(i).toString());
-                        }
-                    }
+//                    Point3D pivot = rubik.getObjectMatrix().get(0).get(0).get(0).sceneToLocal(0,0,0);
+//                    System.out.println(pivot.toString());
+//                    for(int i=0;i<9;i++){
+//                        if(rubik.getObjectMatrix().get(0).get(0).get(0).hashCode()==cubelets.get(i).hashCode()){
+//                            System.out.println("expected point: "+resultPoints.get(i).toString());
+//                        }
+//                    }
                     callNotation(currentNotation);
                     pt.getChildren().clear();
                     isPTRunning=false;
