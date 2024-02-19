@@ -3,6 +3,7 @@ package org.example.prog_meth_project.rendering;
 import javafx.beans.value.WritableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import org.example.prog_meth_project.Notation;
 import org.example.prog_meth_project.model.Cubelet;
@@ -28,13 +29,21 @@ public class Rotation implements WritableValue<Double> {
     private double angle;
     private final ArrayList<RotateListener> listeners = new ArrayList<>();
     public Rotation(Cubelet cubelet, Notation notation){
-        rotate=new Rotate();
-        Point3D origin = cubelet.sceneToLocal(new Point3D(0,0,0));
+        Point3D origin = cubelet.parentToLocal(0,0,0);
+
+        rotate=new Rotate(0);
         rotate.setPivotX(origin.getX());
         rotate.setPivotY(origin.getY());
         rotate.setPivotZ(origin.getZ());
         rotate.setAxis(notation.axis.toPoint3D());
-        rotate.setAngle(0);
+        this.addListener(new Rotation.RotateListener(){
+            @Override
+            public void onAngleChanges(Rotate rotate,double oldAngle,double newAngle){
+                rotate.setAngle(newAngle-oldAngle);
+                Affine affine = cubelet.getAffine();
+                affine.prepend(rotate);
+            }
+        });
     }
     public void addListener(RotateListener listener){
         listeners.add(listener);

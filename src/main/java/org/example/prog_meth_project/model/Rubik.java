@@ -13,6 +13,9 @@ import static org.example.prog_meth_project.Config.*;
 public class Rubik extends Group {
     private final ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix;
 
+    public ArrayList<ArrayList<ArrayList<Cubelet>>> getObjectMatrix(){
+        return rubikObjectMatrix;
+    }
     public Rubik() {
         rubikObjectMatrix = new ArrayList<>(3);
         for (int y = 0; y < 3 ; y++){

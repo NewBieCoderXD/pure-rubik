@@ -4,9 +4,11 @@ import com.ggFROOK.InvalidRubikNotation;
 import com.ggFROOK.RubikFROOK;
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
@@ -31,6 +33,7 @@ import org.example.prog_meth_project.rendering.Rotation;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -58,7 +61,7 @@ public class Main extends Application {
     private double startDragX;
     private double startDragY;
     private final ParallelTransition pt = new ParallelTransition();
-
+    private boolean isPTRunning = false;
     private final RubikFROOK rubikFROOK = new RubikFROOK();
     private boolean startSolving = false;
     private boolean isSolving = false;
@@ -140,7 +143,7 @@ public class Main extends Application {
 //        notationQueue.add(Notation.B);
 //        notationQueue.add(Notation.B_);
 
-        startAnimation();
+        Thread rubikAnimationThread = buildRubikAnimation();
 
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -161,6 +164,7 @@ public class Main extends Application {
                 setAnglesText(anglesText);
             }
         });
+        rubikAnimationThread.start();
     }
 
     private Button buildSolveButton(){
@@ -180,7 +184,6 @@ public class Main extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 startSolving=true;
-                startAnimation();
             }
         });
         return button;
@@ -214,7 +217,6 @@ public class Main extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 notationQueue.add(notation);
-                startAnimation();
             }
         });
         return button;
@@ -226,72 +228,70 @@ public class Main extends Application {
         world.getChildren().add(rubik);
     }
 
-    private void startAnimation(){
-        if(pt.getStatus()== Animation.Status.RUNNING){
-            return;
-        }
-        Notation notation = notationQueue.poll();
-        if(notation==null){
-            if(!startSolving){
-                isSolving=false;
-                return;
+    private void rubikAnimation(){
+        while(!Thread.currentThread().isInterrupted()){
+            if(isPTRunning){
+                continue;
             }
-            startSolving=false;
-            isSolving=true;
-//            rubikFROOK.printRubik(rubikFROOK.getRubik());
-            rubikFROOK.mainSolving();
-            if(rubikFROOK.getSolution().isEmpty()){
-                return;
+            isPTRunning=true;
+            Notation currentNotation = notationQueue.poll();
+            if(currentNotation==null){
+                continue;
             }
-            System.out.println(rubikFROOK.getSolution().toString());
-            for(String solutionNotation: rubikFROOK.getSolution()){
-                if(solutionNotation.length()==2){
-                    notationQueue.add(Notation.valueOf(solutionNotation.charAt(0)+"_"));
-                    continue;
+            ArrayList<Cubelet> cubelets = rubik.getSideOfNotation(currentNotation);
+            ArrayList<Point3D> resultPoints = new ArrayList<>(9);
+            for(int i=0;i<cubelets.size();i++){
+                Cubelet cubelet = cubelets.get(i);
+                int sign = 1;
+                if(currentNotation.isInverted){
+                    sign=-1;
                 }
-                notationQueue.add(Notation.valueOf(solutionNotation));
+                sign*=currentNotation.direction;
+
+                Rotation rotation = new Rotation(cubelet,currentNotation);
+                Point3D point = new Point3D(0,0,0);
+                Point3D origin = cubelet.parentToLocal(0,0,0);
+                Rotate rotate=new Rotate(0);
+                rotate.setPivotX(origin.getX());
+                rotate.setPivotY(origin.getY());
+                rotate.setPivotZ(origin.getZ());
+                rotate.setAxis(currentNotation.axis.toPoint3D());
+                rotate.setAngle(sign*90d);
+                Point3D resultPoint = rotate.transform(point);
+                resultPoints.add(resultPoint);
+
+                Timeline timeline = new Timeline(new KeyFrame(
+                        Duration.ZERO, new KeyValue(rotation,0d)
+                    ),new KeyFrame(
+                        Duration.seconds(SECOND_PER_NOTATION), new KeyValue(rotation,sign*90d)
+                    )
+                );
+                timeline.setCycleCount(1);
+                pt.getChildren().add(timeline);
             }
-            rubikFROOK.getSolution().clear();
-            startAnimation();
-            return;
-        }
-        notationStack.update(notation,notationQueue);
-        pt.getChildren().clear();
-//        System.out.println(rubik.getChildren().get(0).toString()+" "+notation.toPrettyString()+" "+rubik.getChildren().get(0).localToScene(new Point3D(0,0,0)));
-        for(Cubelet cubelet:rubik.getSideOfNotation(notation)){
-            Rotation rotation = new Rotation(cubelet,notation);
-            rotation.addListener(new Rotation.RotateListener(){
+            pt.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
-                public void onAngleChanges(Rotate rotate,double oldAngle,double newAngle){
-                    rotate.setAngle(newAngle-oldAngle);
-                    Affine affine = cubelet.getAffine();
-                    affine.prepend(rotate);
+                public void handle(ActionEvent actionEvent) {
+                    Point3D pivot = rubik.getObjectMatrix().get(0).get(0).get(0).sceneToLocal(0,0,0);
+                    System.out.println(pivot.toString());
+                    for(int i=0;i<9;i++){
+                        if(rubik.getObjectMatrix().get(0).get(0).get(0).hashCode()==cubelets.get(i).hashCode()){
+                            System.out.println("expected point: "+resultPoints.get(i).toString());
+                        }
+                    }
+                    callNotation(currentNotation);
+                    pt.getChildren().clear();
+                    isPTRunning=false;
                 }
             });
-            int sign = 1;
-            if(notation.isInverted){
-               sign=-1;
-            }
-            sign*=notation.direction;
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO,
-                            new KeyValue(rotation, 0d)
-                    ),
-                    new KeyFrame(Duration.seconds(SECOND_PER_NOTATION),
-                            new KeyValue(rotation, sign*90d)
-                    )
-            );
-            timeline.setCycleCount(1);
-            pt.getChildren().add(timeline);
+            Platform.runLater(pt::play);
         }
-        pt.setOnFinished(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event){
-                callNotation(notation);
-                startAnimation();
-            }
-        });
-        pt.play();
+    }
+
+    private Thread buildRubikAnimation(){
+        Thread thread = new Thread(this::rubikAnimation);
+        thread.setDaemon(true);
+        return thread;
     }
 
     private void callNotation(Notation notation){
