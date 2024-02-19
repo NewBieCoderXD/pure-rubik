@@ -124,12 +124,13 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
-        for(int i=0;i<100;i++){
-            notationQueue.add(Notation.R);
+//        for(int i=0;i<100;i++){
+//            notationQueue.add(Notation.R);
 //            notationQueue.add(Notation.R);
 //            notationQueue.add(Notation.F);
 //            notationQueue.add(Notation.F);
-        }
+//        }
+
 //        notationQueue.add(Notation.R);
 //        notationQueue.add(Notation.R_);
 //        notationQueue.add(Notation.L);
@@ -233,26 +234,41 @@ public class Main extends Application {
             if(isPTRunning){
                 continue;
             }
-            isPTRunning=true;
             Notation currentNotation = notationQueue.poll();
             if(currentNotation==null){
+                isSolving=false;
+                if(startSolving){
+                    isSolving=true;
+                    startSolving=false;
+                    rubikFROOK.mainSolving();
+                    for(String notationString: rubikFROOK.getSolution()){
+                        if(notationString.length()==2){
+                            notationQueue.add(Notation.valueOf(notationString.charAt(0)+"_"));
+                            continue;
+                        }
+                        notationQueue.add(Notation.valueOf(notationString));
+                    }
+                    rubikFROOK.getSolution().clear();
+                }
                 continue;
             }
+
+            isPTRunning=true;
             ArrayList<Cubelet> cubelets = rubik.getSideOfNotation(currentNotation);
-            for(int i=0;i<cubelets.size();i++){
-                Cubelet cubelet = cubelets.get(i);
+            for (Cubelet cubelet : cubelets) {
                 int sign = 1;
-                if(currentNotation.isInverted){
-                    sign=-1;
+                if (currentNotation.isInverted) {
+                    sign = -1;
                 }
-                sign*=currentNotation.direction;
+                sign *= currentNotation.direction;
 
-                Rotation rotation = new Rotation(cubelet,currentNotation);
+                Rotation rotation = new Rotation(cubelet, currentNotation);
 
-                Timeline timeline = new Timeline(new KeyFrame(
-                        Duration.ZERO, new KeyValue(rotation,0d)
-                    ),new KeyFrame(
-                        Duration.seconds(SECOND_PER_NOTATION), new KeyValue(rotation,sign*90d)
+                Timeline timeline = new Timeline(
+                    new KeyFrame(
+                        Duration.ZERO, new KeyValue(rotation, 0d)
+                    ), new KeyFrame(
+                        Duration.seconds(SECOND_PER_NOTATION), new KeyValue(rotation, sign * 90d)
                     )
                 );
                 timeline.setCycleCount(1);
@@ -278,7 +294,7 @@ public class Main extends Application {
 
     private void callNotation(Notation notation){
         try{
-            System.out.println(notation.toString());
+            System.out.println(notation.toString()+" ,isSolving: "+ isSolving);
             rubik.call(notation);
             if(!isSolving) {
                 rubikFROOK.call(notation.toString(), true);
