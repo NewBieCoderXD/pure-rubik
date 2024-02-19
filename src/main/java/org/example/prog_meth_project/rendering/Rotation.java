@@ -30,7 +30,6 @@ public class Rotation implements WritableValue<Double> {
     private final Cubelet cubelet;
     private final ArrayList<RotateListener> listeners = new ArrayList<>();
     public Rotation(Cubelet cubelet, Notation notation){
-        Bounds translate = cubelet.getBoundsInParent();
         rotate=new Rotate(0);
         rotate.setPivotX(-cubelet.getTranslateX());
         rotate.setPivotY(-cubelet.getTranslateY());
