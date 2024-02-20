@@ -49,8 +49,8 @@ public class Main extends Application {
     final Xform cameraXform = new Xform();
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
-    private Rubik rubik;
-    private final Queue<Notation> notationQueue = new LinkedList<>();
+    volatile static Rubik rubik;
+    volatile static Queue<Notation> notationQueue = new LinkedList<>();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
     private static final double CAMERA_INITIAL_X_ANGLE = -45;
     private static final double CAMERA_INITIAL_Y_ANGLE = 180;
@@ -60,12 +60,10 @@ public class Main extends Application {
 
     private double startDragX;
     private double startDragY;
-    private final ParallelTransition pt = new ParallelTransition();
-    private boolean isPTRunning = false;
-    private final RubikFROOK rubikFROOK = new RubikFROOK();
-    private boolean startSolving = false;
-    private boolean isSolving = false;
-    private NotationStack notationStack;
+    volatile static RubikFROOK rubikFROOK = new RubikFROOK();
+    volatile static boolean startSolving = false;
+    volatile static boolean isSolving = false;
+    volatile static NotationStack notationStack;
 
     private void setAnglesText(Text text){
         text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", cameraXform.rx.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
@@ -89,7 +87,6 @@ public class Main extends Application {
         root.getChildren().add(anglesText);
         return anglesText;
     }
-
 
     @Override
     public void start(Stage stage) {
@@ -120,16 +117,9 @@ public class Main extends Application {
         root.getChildren().add(notationMenu);
 
         stage.setMaximized(true);
-        stage.setTitle("Hello!");
+        stage.setTitle("ISUS: rubik simulator");
         stage.setScene(scene);
         stage.show();
-
-//        for(int i=0;i<100;i++){
-//            notationQueue.add(Notation.R);
-//            notationQueue.add(Notation.R);
-//            notationQueue.add(Notation.F);
-//            notationQueue.add(Notation.F);
-//        }
 
 //        notationQueue.add(Notation.R);
 //        notationQueue.add(Notation.R_);
@@ -144,7 +134,7 @@ public class Main extends Application {
 //        notationQueue.add(Notation.B);
 //        notationQueue.add(Notation.B_);
 
-        Thread rubikAnimationThread = buildRubikAnimation();
+        Thread rubikAnimationThread = RubikAnimationThread.getInstance();
 
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -227,81 +217,6 @@ public class Main extends Application {
         rubik = new Rubik();
         rubikFROOK.initRubik();
         world.getChildren().add(rubik);
-    }
-
-    private void rubikAnimation(){
-        while(!Thread.currentThread().isInterrupted()){
-            if(isPTRunning){
-                continue;
-            }
-            if(notationQueue.isEmpty()){
-                // if it is empty that mean either 1.done all scrambles or 2.done solving
-                // either way, isSolving should be set to false
-                isSolving=false;
-                // if solving button is just pressed, set isSolving to true
-                if(startSolving){
-                    isSolving=true;
-                    startSolving=false;
-                    rubikFROOK.mainSolving();
-                    for(String notationString: rubikFROOK.getSolution()){
-                        notationQueue.add(Notation.stringToNotation(notationString));
-                    }
-                }
-                continue;
-            }
-
-            Notation currentNotation = notationQueue.poll();
-            isPTRunning=true;
-            ArrayList<Cubelet> cubelets = rubik.getSideOfNotation(currentNotation);
-            for (Cubelet cubelet : cubelets) {
-                int sign = 1;
-                if (currentNotation.isInverted) {
-                    sign = -1;
-                }
-                sign *= currentNotation.direction;
-
-                Rotation rotation = new Rotation(cubelet, currentNotation);
-
-                Timeline timeline = new Timeline(
-                    new KeyFrame(
-                        Duration.ZERO, new KeyValue(rotation, 0d)
-                    ), new KeyFrame(
-                        Duration.seconds(SECOND_PER_NOTATION), new KeyValue(rotation, sign * 90d)
-                    )
-                );
-                timeline.setCycleCount(1);
-                pt.getChildren().add(timeline);
-            }
-            pt.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    callNotation(currentNotation);
-                    notationStack.update(currentNotation,notationQueue);
-                    pt.getChildren().clear();
-                    isPTRunning=false;
-                }
-            });
-            Platform.runLater(pt::play);
-        }
-    }
-
-    private Thread buildRubikAnimation(){
-        Thread thread = new Thread(this::rubikAnimation);
-        thread.setDaemon(true);
-        return thread;
-    }
-
-    private void callNotation(Notation notation){
-        try{
-            System.out.println(notation.toString()+" ,isSolving: "+ isSolving);
-            rubik.call(notation);
-            if(!isSolving) {
-                rubikFROOK.call(notation.toString(), true);
-            }
-        }
-        catch(InvalidRubikNotation e){
-            System.out.println(e.toString());
-        }
     }
 
     private void buildCamera() {

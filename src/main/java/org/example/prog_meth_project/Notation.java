@@ -36,4 +36,7 @@ public enum Notation {
         }
         return Notation.valueOf(notationString);
     }
+    public int rotatingDirection(){
+        return this.direction * (this.isInverted ? -1 : 1);
+    }
 }
