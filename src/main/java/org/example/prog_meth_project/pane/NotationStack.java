@@ -1,6 +1,8 @@
 package org.example.prog_meth_project.pane;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -8,11 +10,26 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.example.prog_meth_project.Notation;
 
+import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Queue;
+import java.util.Stack;
 
 public class NotationStack extends VBox {
+    private static NotationStack instance;
+    private final ArrayDeque<String> deque = new ArrayDeque<>();
+    private final ArrayDeque<String> futureDeque = new ArrayDeque<>();
+    public static NotationStack getInstance(){
+        if(instance!=null){
+            return instance;
+        }
+        instance=new NotationStack();
+        return instance;
+    }
     public NotationStack(){
+        for(int i=0;i<2;i++) {
+            this.deque.add("gg");
+        }
         this.setMaxSize(VBox.USE_PREF_SIZE, VBox.USE_PREF_SIZE);
 
         for(int i=0;i<5;i++){
@@ -71,7 +88,45 @@ public class NotationStack extends VBox {
             this.getNodeText(i).setText("");
         }
     }
-//    public Text setNodeText(int index){
-//
-//    }
+    public ArrayDeque<String> getDeque(){
+        return deque;
+    }
+    public ArrayDeque<String> getFutureDeque(){
+        return futureDeque;
+    }
+    public void update(){
+        System.out.println("future "+futureDeque.size());
+        System.out.println("deque "+deque.size());
+        Iterator<String> dequeItr = deque.iterator();
+        Iterator<String> futureDequeItr = futureDeque.descendingIterator();
+        for(int i=2;i>=0;i--){
+            String notation = "";
+            if(futureDequeItr.hasNext()){
+                notation=futureDequeItr.next();
+            }
+            Text child = this.getNodeText(i);
+            child.setText(notation);
+        }
+        for(int i=2;i<5&&dequeItr.hasNext();i++){
+            String notation = dequeItr.next();
+            Text child = this.getNodeText(i);
+            child.setText(notation);
+        }
+    }
+    public void add(Notation notation){
+        if(deque.size()==3){
+            futureDeque.addFirst(notation.toPrettyString());
+        }
+        else {
+            deque.addFirst(notation.toPrettyString());
+        }
+        Platform.runLater(this::update);
+    }
+    public void poll(){
+        if(!futureDeque.isEmpty()) {
+            deque.pollLast();
+            deque.addFirst(futureDeque.pollLast());
+        }
+        Platform.runLater(this::update);
+    }
 }

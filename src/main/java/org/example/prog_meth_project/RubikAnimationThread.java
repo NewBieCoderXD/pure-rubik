@@ -62,7 +62,7 @@ public class RubikAnimationThread extends Thread{
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     callNotation(currentNotation);
-                    notationStack.update(currentNotation,notationQueue);
+//                    notationStack.update(currentNotation,notationQueue);
                     pt.getChildren().clear();
                     isPTRunning=false;
                 }

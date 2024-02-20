@@ -50,7 +50,8 @@ public class Main extends Application {
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
     volatile static Rubik rubik;
-    volatile static Queue<Notation> notationQueue = new LinkedList<>();
+//    volatile static Queue<Notation> notationQueue = new LinkedList<>();
+    volatile static NotationQueue notationQueue = new NotationQueue();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
     private static final double CAMERA_INITIAL_X_ANGLE = -45;
     private static final double CAMERA_INITIAL_Y_ANGLE = 180;
@@ -63,7 +64,7 @@ public class Main extends Application {
     volatile static RubikFROOK rubikFROOK = new RubikFROOK();
     volatile static boolean startSolving = false;
     volatile static boolean isSolving = false;
-    volatile static NotationStack notationStack;
+    volatile static NotationStack notationStack = NotationStack.getInstance();
 
     private void setAnglesText(Text text){
         text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", cameraXform.rx.getAngle(), cameraXform.ry.getAngle(), cameraXform.rz.getAngle()));
@@ -84,7 +85,6 @@ public class Main extends Application {
         anglesText.setTextAlignment(TextAlignment.LEFT);
         anglesText.setWrappingWidth(root.getPrefWidth());
         setAnglesText(anglesText);
-        root.getChildren().add(anglesText);
         return anglesText;
     }
 
@@ -104,16 +104,20 @@ public class Main extends Application {
 
         Region emptyRegion1 = new Region();
         VBox.setVgrow(emptyRegion1, Priority.ALWAYS);
-        root.getChildren().add(emptyRegion1);
-
-        notationStack = new NotationStack();
-        root.getChildren().add(notationStack);
 
         Region emptyRegion2 = new Region();
         VBox.setVgrow(emptyRegion2, Priority.ALWAYS);
-        root.getChildren().add(emptyRegion2);
 
         GridPane notationMenu = buildMenus();
+
+        root.getChildren().add(anglesText);
+
+        root.getChildren().add(emptyRegion1);
+
+        root.getChildren().add(notationStack);
+
+        root.getChildren().add(emptyRegion2);
+
         root.getChildren().add(notationMenu);
 
         stage.setMaximized(true);
