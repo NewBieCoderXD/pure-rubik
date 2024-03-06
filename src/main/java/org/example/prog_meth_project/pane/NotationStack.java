@@ -27,9 +27,6 @@ public class NotationStack extends VBox {
         return instance;
     }
     public NotationStack(){
-        for(int i=0;i<2;i++) {
-            this.deque.add("gg");
-        }
         this.setMaxSize(VBox.USE_PREF_SIZE, VBox.USE_PREF_SIZE);
 
         for(int i=0;i<5;i++){
