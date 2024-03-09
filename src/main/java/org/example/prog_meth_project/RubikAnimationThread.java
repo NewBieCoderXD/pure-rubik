@@ -13,6 +13,7 @@ import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.rendering.Rotation;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static org.example.prog_meth_project.Config.SECOND_PER_NOTATION;
 import static org.example.prog_meth_project.Main.*;
@@ -42,9 +43,9 @@ public class RubikAnimationThread extends Thread{
                 if(startSolving){
                     isSolving=true;
                     startSolving=false;
-                    rubikFROOK.mainSolving();
-                    for(String notationString: rubikFROOK.getSolution()){
-                        notationQueue.add(Notation.stringToNotation(notationString));
+                    ArrayList<com.ggFROOK.Notation> solution = rubikFROOK.mainSolving();
+                    for(String notationString: solution.stream().map(Object::toString).toList()){
+                        notationQueue.add(Notation.valueOf(notationString));
                     }
                 }
                 continue;
@@ -96,7 +97,7 @@ public class RubikAnimationThread extends Thread{
             }
         }
         catch(InvalidRubikNotation e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
     }
 

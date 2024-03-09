@@ -1,5 +1,6 @@
 package org.example.prog_meth_project;
 
+import javafx.application.Platform;
 import org.example.prog_meth_project.pane.NotationStack;
 import org.example.prog_meth_project.Notation;
 
@@ -10,7 +11,9 @@ import java.util.Stack;
 public class NotationQueue extends LinkedList<Notation> {
     @Override
     public boolean add(Notation notation) {
-        NotationStack.getInstance().add(notation);
+        Platform.runLater(()->{
+            NotationStack.getInstance().add(notation);
+        });
         return super.add(notation);
     }
 

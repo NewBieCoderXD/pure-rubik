@@ -92,8 +92,8 @@ public class NotationStack extends VBox {
         return futureDeque;
     }
     public void update(){
-        System.out.println("future "+futureDeque.size());
-        System.out.println("deque "+deque.size());
+//        System.out.println("future "+futureDeque.size());
+//        System.out.println("deque "+deque.size());
         Iterator<String> dequeItr = deque.iterator();
         Iterator<String> futureDequeItr = futureDeque.descendingIterator();
         for(int i=2;i>=0;i--){
