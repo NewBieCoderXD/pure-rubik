@@ -1,4 +1,4 @@
-package org.example.prog_meth_project;
+package org.example.prog_meth_project.application;
 
 import com.ggFROOK.InvalidRubikNotation;
 import javafx.animation.KeyFrame;
@@ -13,10 +13,9 @@ import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.rendering.Rotation;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-import static org.example.prog_meth_project.Config.SECOND_PER_NOTATION;
-import static org.example.prog_meth_project.Main.*;
+import static org.example.prog_meth_project.application.Main.*;
+import static org.example.prog_meth_project.config.Config.SECOND_PER_NOTATION;
 
 public class RubikAnimationThread extends Thread{
     private static boolean isPTRunning = false;

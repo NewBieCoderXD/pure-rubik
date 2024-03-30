@@ -1,11 +1,9 @@
 package org.example.prog_meth_project.rendering;
 
 import javafx.beans.value.WritableValue;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point3D;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import org.example.prog_meth_project.Notation;
+import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.model.Cubelet;
 
 import java.util.ArrayList;

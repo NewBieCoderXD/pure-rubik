@@ -6,7 +6,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Affine;
 
-import static org.example.prog_meth_project.Config.*;
+import static org.example.prog_meth_project.config.Config.*;
 
 public class Cubelet extends Group {
     private void setMaterialOfBox(Box borderBox) {

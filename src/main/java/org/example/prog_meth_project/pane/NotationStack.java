@@ -2,18 +2,16 @@ package org.example.prog_meth_project.pane;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import org.example.prog_meth_project.Notation;
+import org.example.prog_meth_project.application.Notation;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Queue;
-import java.util.Stack;
 
 public class NotationStack extends VBox {
     private static NotationStack instance;

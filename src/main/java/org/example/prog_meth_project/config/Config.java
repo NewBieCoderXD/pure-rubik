@@ -1,4 +1,4 @@
-package org.example.prog_meth_project;
+package org.example.prog_meth_project.config;
 
 import javafx.scene.paint.Color;
 

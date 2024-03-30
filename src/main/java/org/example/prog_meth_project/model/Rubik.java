@@ -2,13 +2,14 @@ package org.example.prog_meth_project.model;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import org.example.prog_meth_project.Notation;
+import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.rendering.Axis;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import static org.example.prog_meth_project.Config.*;
+
+import static org.example.prog_meth_project.config.Config.*;
 
 public class Rubik extends Group {
     private final ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix;

@@ -1,14 +1,8 @@
-package org.example.prog_meth_project;
+package org.example.prog_meth_project.application;
 
-import com.ggFROOK.InvalidRubikNotation;
 import com.ggFROOK.RubikFROOK;
-import javafx.animation.*;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
@@ -21,24 +15,16 @@ import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.model.Rubik;
 import org.example.prog_meth_project.pane.NotationStack;
-import org.example.prog_meth_project.rendering.Rotation;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
-import static org.example.prog_meth_project.Config.DRAG_SENSITIVITY;
-import static org.example.prog_meth_project.Config.SECOND_PER_NOTATION;
+import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
 
 public class Main extends Application {
     final VBox root = new VBox();
@@ -193,7 +179,7 @@ public class Main extends Application {
     }
 
     private void buildMenu(GridPane menu){
-        for(int i=0;i<Notation.values().length;i++) {
+        for(int i = 0; i< Notation.values().length; i++) {
             Notation notation = Notation.values()[i];
             Button notationButton = notationButton(notation);
             menu.add(notationButton, i/2+1, notation.isInverted? 3:0);

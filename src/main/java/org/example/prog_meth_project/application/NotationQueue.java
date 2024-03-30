@@ -1,12 +1,9 @@
-package org.example.prog_meth_project;
+package org.example.prog_meth_project.application;
 
 import javafx.application.Platform;
 import org.example.prog_meth_project.pane.NotationStack;
-import org.example.prog_meth_project.Notation;
 
-import java.util.ArrayDeque;
 import java.util.LinkedList;
-import java.util.Stack;
 
 public class NotationQueue extends LinkedList<Notation> {
     @Override
