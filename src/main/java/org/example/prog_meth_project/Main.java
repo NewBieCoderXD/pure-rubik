@@ -47,15 +47,13 @@ public class Main extends Application {
     final Xform axisGroup = new Xform();
     final PerspectiveCamera camera = new PerspectiveCamera(true);
     final Xform cameraXform = new Xform();
-    final Xform cameraXform2 = new Xform();
-    final Xform cameraXform3 = new Xform();
     volatile static Rubik rubik;
 //    volatile static Queue<Notation> notationQueue = new LinkedList<>();
     volatile static NotationQueue notationQueue = new NotationQueue();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
-    private static final double CAMERA_INITIAL_X_ANGLE = -45;
-    private static final double CAMERA_INITIAL_Y_ANGLE = 180;
-    private static final double CAMERA_INITIAL_Z_ANGLE = 135;
+    private static final double CAMERA_INITIAL_X_ANGLE = 45;
+    private static final double CAMERA_INITIAL_Y_ANGLE = -180;
+    private static final double CAMERA_INITIAL_Z_ANGLE = -45;
     private static final double CAMERA_NEAR_CLIP = 0.01;
     private static final double CAMERA_FAR_CLIP = 10000.0;
 
@@ -155,7 +153,7 @@ public class Main extends Application {
                 startDragX = event.getSceneX();
                 startDragY = event.getSceneY();
                 cameraXform.rz.setAngle(cameraXform.rz.getAngle() - xDistance * DRAG_SENSITIVITY);
-                cameraXform.rx.setAngle(cameraXform.rx.getAngle() + yDistance * DRAG_SENSITIVITY);
+                cameraXform.rx.setAngle(cameraXform.rx.getAngle() - yDistance * DRAG_SENSITIVITY);
                 setAnglesText(anglesText);
             }
         });
@@ -225,10 +223,12 @@ public class Main extends Application {
 
     private void buildCamera() {
         root.getChildren().add(cameraXform);
-        cameraXform.getChildren().add(cameraXform2);
-        cameraXform2.getChildren().add(cameraXform3);
-        cameraXform3.getChildren().add(camera);
-        cameraXform3.setRotateZ(180.0);
+//        cameraXform.getChildren().add(cameraXform2);
+//        cameraXform2.getChildren().add(cameraXform3);
+//        cameraXform3.getChildren().add(camera);
+        cameraXform.getChildren().add(camera);
+        cameraXform.setRotateZ(180.0);
+//        cameraXform3.setRotateZ(180.0);
 
         camera.setNearClip(CAMERA_NEAR_CLIP);
         camera.setFarClip(CAMERA_FAR_CLIP);
