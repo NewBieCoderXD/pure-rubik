@@ -4,6 +4,6 @@ module org.example.prog_meth_project {
 
     requires org.kordamp.bootstrapfx.core;
 
-    opens org.example.prog_meth_project to javafx.fxml;
-    exports org.example.prog_meth_project;
+    opens org.example.prog_meth_project.application to javafx.fxml;
+    exports org.example.prog_meth_project.application;
 }

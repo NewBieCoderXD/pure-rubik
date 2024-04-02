@@ -18,7 +18,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.example.prog_meth_project.model.Rubik;
+import org.example.prog_meth_project.model.MirrorRubik;
 import org.example.prog_meth_project.pane.NotationStack;
 import org.example.prog_meth_project.rendering.Xform;
 
@@ -33,7 +33,7 @@ public class Main extends Application {
     final Xform axisGroup = new Xform();
     final PerspectiveCamera camera = new PerspectiveCamera(true);
     final Xform cameraXform = new Xform();
-    volatile static Rubik rubik;
+    volatile static MirrorRubik mirrorRubik;
 //    volatile static Queue<Notation> notationQueue = new LinkedList<>();
     volatile static NotationQueue notationQueue = new NotationQueue();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
@@ -202,9 +202,9 @@ public class Main extends Application {
     }
 
     private void buildRubik() {
-        rubik = new Rubik();
+        mirrorRubik = new MirrorRubik();
         rubikFROOK.initRubik();
-        world.getChildren().add(rubik);
+        world.getChildren().add(mirrorRubik);
     }
 
     private void buildCamera() {

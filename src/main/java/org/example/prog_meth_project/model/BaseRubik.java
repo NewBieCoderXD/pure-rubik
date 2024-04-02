@@ -1,6 +1,7 @@
 package org.example.prog_meth_project.model;
 
 import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.rendering.Axis;
 
@@ -11,9 +12,9 @@ import java.util.Map;
 import static org.example.prog_meth_project.config.Config.*;
 import static org.example.prog_meth_project.config.Config.CUBELET_DISTANCE;
 
-public abstract class BaseRubik {
+public abstract class BaseRubik extends Group {
 
-    private final ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix;
+    protected ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix;
 
     public ArrayList<ArrayList<ArrayList<Cubelet>>> getObjectMatrix(){
         return rubikObjectMatrix;

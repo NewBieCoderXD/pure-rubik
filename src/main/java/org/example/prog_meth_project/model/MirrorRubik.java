@@ -1,7 +1,6 @@
 package org.example.prog_meth_project.model;
 
 import javafx.geometry.Point3D;
-import javafx.scene.Group;
 import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.rendering.Axis;
 
@@ -10,14 +9,11 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.example.prog_meth_project.config.Config.*;
+import static org.example.prog_meth_project.config.Config.CUBELET_DISTANCE;
 
-public class Rubik extends Group {
-    private final ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix;
+public class MirrorRubik extends BaseRubik {
 
-    public ArrayList<ArrayList<ArrayList<Cubelet>>> getObjectMatrix(){
-        return rubikObjectMatrix;
-    }
-    public Rubik() {
+    public MirrorRubik() {
         rubikObjectMatrix = new ArrayList<>(3);
         for (int y = 0; y < 3 ; y++){
             rubikObjectMatrix.add(new ArrayList<>(3));
@@ -36,15 +32,17 @@ public class Rubik extends Group {
         }
     }
 
-    private static Point3D getLengthOfCubeletAt(int x, int y, int z){
+    @Override
+    protected Point3D getLengthOfCubeletAt(int x, int y, int z){
         return new Point3D(
-            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1),
-            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1),
-            CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1)
+                CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1),
+                CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1),
+                CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1)
         );
     }
 
-    private static Cubelet createCubelet(int x, int y, int z) {
+    @Override
+    protected Cubelet createCubelet(int x, int y, int z) {
         Point3D lengthOfCubelet = getLengthOfCubeletAt(x,y,z);
         double xLength = lengthOfCubelet.getX();
         double yLength = lengthOfCubelet.getY();
@@ -57,6 +55,7 @@ public class Rubik extends Group {
         return cubelet;
     }
 
+    @Override
     public ArrayList<Cubelet> getSideOfNotation(Notation notation){
 //        int distance = switch (notation){
 //            case R, R_ -> 1;
@@ -68,6 +67,7 @@ public class Rubik extends Group {
 //        };
         return getSideAny(notation.direction, notation.axis);
     }
+    @Override
     public ArrayList<Cubelet> getSideAny(int distance, Axis axis){
         return switch(axis){
             case X_AXIS -> getSideX(distance);
@@ -75,6 +75,7 @@ public class Rubik extends Group {
             case Z_AXIS -> getSideZ(distance);
         };
     }
+    @Override
     public ArrayList<Cubelet> getSideX(int direction){
         int x=direction+1;
         ArrayList<Cubelet> result = new ArrayList<>(9);
@@ -85,6 +86,7 @@ public class Rubik extends Group {
         }
         return result;
     }
+    @Override
     public ArrayList<Cubelet> getSideY(int direction){
         int y=direction+1;
         ArrayList<Cubelet> result = new ArrayList<>(9);
@@ -95,6 +97,7 @@ public class Rubik extends Group {
         }
         return result;
     }
+    @Override
     public ArrayList<Cubelet> getSideZ(int direction){
         int z=direction+1;
         ArrayList<Cubelet> result = new ArrayList<>(9);
@@ -105,10 +108,11 @@ public class Rubik extends Group {
         }
         return result;
     }
-    private void swapFromNotation(Notation notation,Map.Entry<Integer,Integer> source,Map.Entry<Integer,Integer>  target){
+    @Override
+    protected void swapFromNotation(Notation notation, Map.Entry<Integer,Integer> source, Map.Entry<Integer,Integer>  target){
 
         int sourceX = 0, sourceY = 0, sourceZ = 0,
-            targetX = 0, targetY = 0, targetZ = 0;
+                targetX = 0, targetY = 0, targetZ = 0;
         switch (notation.axis) {
             case X_AXIS: {
                 sourceX = notation.direction+1;
@@ -140,7 +144,9 @@ public class Rubik extends Group {
         }
         swapRubikMatrix(sourceX,sourceY,sourceZ,targetX,targetY,targetZ);
     }
-    private void swapCorners(Notation notation){
+
+    @Override
+    protected void swapCorners(Notation notation){
 
         final Map.Entry<Integer,Integer>[] allCornersSequentially=new Map.Entry[]{
                 Map.entry(0,0),
@@ -151,8 +157,8 @@ public class Rubik extends Group {
         swapThreeTimes(notation,allCornersSequentially);
     }
 
-
-    private void swapEdges(Notation notation){
+    @Override
+    protected void swapEdges(Notation notation){
         final Map.Entry<Integer,Integer>[] allEdgesSequentially=new Map.Entry[]{
                 Map.entry(0,1),
                 Map.entry(1,2),
@@ -162,7 +168,8 @@ public class Rubik extends Group {
         swapThreeTimes(notation, allEdgesSequentially);
     }
 
-    private void swapThreeTimes(Notation notation,Map.Entry<Integer,Integer>[] sequentialOrder){
+    @Override
+    protected void swapThreeTimes(Notation notation,Map.Entry<Integer,Integer>[] sequentialOrder){
         // Y axis isn't sequential
         boolean isSequential=!notation.isInverted ==(notation.axis==Axis.Y_AXIS)==(notation.direction==-1);
 
@@ -180,13 +187,14 @@ public class Rubik extends Group {
         }
     }
 
-
+    @Override
     public void call(Notation notation){
         swapCorners(notation);
         swapEdges(notation);
     }
 
-    private void swapRubikMatrix(int lhsX, int lhsY,int lhsZ, int rhsX, int rhsY,int rhsZ){
+    @Override
+    protected void swapRubikMatrix(int lhsX, int lhsY,int lhsZ, int rhsX, int rhsY,int rhsZ){
         Cubelet temp = rubikObjectMatrix.get(lhsZ).get(lhsY).get(lhsX);
         rubikObjectMatrix.get(lhsZ).get(lhsY).set(lhsX,rubikObjectMatrix.get(rhsZ).get(rhsY).get(rhsX));
         rubikObjectMatrix.get(rhsZ).get(rhsY).set(rhsX,temp);

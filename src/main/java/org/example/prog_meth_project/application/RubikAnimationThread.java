@@ -53,7 +53,7 @@ public class RubikAnimationThread extends Thread{
             Notation currentNotation = notationQueue.poll();
             isPTRunning=true;
             assert currentNotation != null;
-            ArrayList<Cubelet> cubelets = rubik.getSideOfNotation(currentNotation);
+            ArrayList<Cubelet> cubelets = mirrorRubik.getSideOfNotation(currentNotation);
             for (Cubelet cubelet : cubelets) {
                 Timeline timeline = buildCubeletTimeline(cubelet, currentNotation);
                 pt.getChildren().add(timeline);
@@ -90,7 +90,7 @@ public class RubikAnimationThread extends Thread{
     private void callNotation(Notation notation){
         try{
             System.out.println(notation.toString());
-            rubik.call(notation);
+            mirrorRubik.call(notation);
             if(!isSolving) {
                 rubikFROOK.call(notation.toString(), true);
             }
