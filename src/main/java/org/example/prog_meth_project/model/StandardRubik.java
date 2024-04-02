@@ -11,9 +11,10 @@ import java.util.Map;
 import static org.example.prog_meth_project.config.Config.*;
 import static org.example.prog_meth_project.config.Config.CUBELET_DISTANCE;
 
-public class MirrorRubik extends BaseRubik {
+public class StandardRubik extends BaseRubik{
 
-    public MirrorRubik() {
+
+    public StandardRubik() {
         rubikObjectMatrix = new ArrayList<>(3);
         for (int y = 0; y < 3 ; y++){
             rubikObjectMatrix.add(new ArrayList<>(3));
@@ -32,25 +33,15 @@ public class MirrorRubik extends BaseRubik {
         }
     }
 
-    protected Point3D getLengthOfCubeletAt(int x, int y, int z){
-        return new Point3D(
-                CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1),
-                CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1),
-                CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1)
-        );
-    }
 
     @Override
     protected Cubelet createCubelet(int x, int y, int z) {
-        Point3D lengthOfCubelet = getLengthOfCubeletAt(x,y,z);
-        double xLength = lengthOfCubelet.getX();
-        double yLength = lengthOfCubelet.getY();
-        double zLength = lengthOfCubelet.getZ();
-        Point3D lengthOfCenterCubelet = getLengthOfCubeletAt(0,0,0);
-        Cubelet cubelet = new Cubelet(xLength, yLength, zLength);
-        cubelet.setTranslateX((lengthOfCenterCubelet.getX()/2 + xLength / 2 + CUBELET_DISTANCE) * -x);
-        cubelet.setTranslateY((lengthOfCenterCubelet.getY()/2 + yLength / 2 + CUBELET_DISTANCE) * -y);
-        cubelet.setTranslateZ((lengthOfCenterCubelet.getZ()/2 + zLength / 2 + CUBELET_DISTANCE) * -z);
+        double lengthOfCubelet = CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL;
+
+        Cubelet cubelet = new Cubelet(lengthOfCubelet, lengthOfCubelet, lengthOfCubelet);
+        cubelet.setTranslateX((lengthOfCubelet/2 + lengthOfCubelet / 2 + CUBELET_DISTANCE) * -x);
+        cubelet.setTranslateY((lengthOfCubelet/2 + lengthOfCubelet / 2 + CUBELET_DISTANCE) * -y);
+        cubelet.setTranslateZ((lengthOfCubelet/2 + lengthOfCubelet / 2 + CUBELET_DISTANCE) * -z);
         return cubelet;
     }
 

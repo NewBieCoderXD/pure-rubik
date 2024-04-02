@@ -1,6 +1,7 @@
 package org.example.prog_meth_project.application;
 
 import com.ggFROOK.InvalidRubikNotation;
+import com.ggFROOK.RubikFROOK;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
@@ -9,6 +10,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
+import org.example.prog_meth_project.model.BaseRubik;
 import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.rendering.Rotation;
 
@@ -20,13 +22,18 @@ import static org.example.prog_meth_project.config.Config.SECOND_PER_NOTATION;
 public class RubikAnimationThread extends Thread{
     private static boolean isPTRunning = false;
     private final ParallelTransition pt = new ParallelTransition();
-    private static RubikAnimationThread instance = null;
-    public static RubikAnimationThread getInstance(){
-        if(instance==null){
-            instance=new RubikAnimationThread();
-            instance.setDaemon(true);
-        }
-        return instance;
+
+    private NotationQueue notationQueue;
+    private Boolean isSolving;
+    private Boolean startSolving;
+    private RubikFROOK rubikFROOK;
+    private BaseRubik rubik;
+    public RubikAnimationThread(NotationQueue notationQueue, Boolean isSolving, Boolean startSolving, RubikFROOK rubikFROOK,BaseRubik rubik){
+        this.notationQueue=notationQueue;
+        this.isSolving=isSolving;
+        this.startSolving=startSolving;
+        this.rubikFROOK=rubikFROOK;
+        this.rubik=rubik;
     }
     @Override
     public void run(){
@@ -53,7 +60,7 @@ public class RubikAnimationThread extends Thread{
             Notation currentNotation = notationQueue.poll();
             isPTRunning=true;
             assert currentNotation != null;
-            ArrayList<Cubelet> cubelets = mirrorRubik.getSideOfNotation(currentNotation);
+            ArrayList<Cubelet> cubelets = rubik.getSideOfNotation(currentNotation);
             for (Cubelet cubelet : cubelets) {
                 Timeline timeline = buildCubeletTimeline(cubelet, currentNotation);
                 pt.getChildren().add(timeline);
@@ -90,7 +97,7 @@ public class RubikAnimationThread extends Thread{
     private void callNotation(Notation notation){
         try{
             System.out.println(notation.toString());
-            mirrorRubik.call(notation);
+            rubik.call(notation);
             if(!isSolving) {
                 rubikFROOK.call(notation.toString(), true);
             }

@@ -23,7 +23,7 @@ public abstract class BaseRubik extends Group {
         rubikObjectMatrix = new ArrayList<>(3);
     }
 
-    abstract protected Point3D getLengthOfCubeletAt(int x, int y, int z);
+//    abstract protected Point3D getLengthOfCubeletAt(int x, int y, int z);
 
     abstract protected Cubelet createCubelet(int x, int y, int z);
 
