@@ -15,6 +15,7 @@ import org.example.prog_meth_project.model.Cubelet;
 import org.example.prog_meth_project.rendering.Rotation;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.example.prog_meth_project.application.Main.*;
 import static org.example.prog_meth_project.config.Config.SECOND_PER_NOTATION;
@@ -24,11 +25,11 @@ public class RubikAnimationThread extends Thread{
     private final ParallelTransition pt = new ParallelTransition();
 
     private NotationQueue notationQueue;
-    private Boolean isSolving;
-    private Boolean startSolving;
+    private AtomicBoolean isSolving;
+    private AtomicBoolean startSolving;
     private RubikFROOK rubikFROOK;
     private BaseRubik rubik;
-    public RubikAnimationThread(NotationQueue notationQueue, Boolean isSolving, Boolean startSolving, RubikFROOK rubikFROOK,BaseRubik rubik){
+    public RubikAnimationThread(NotationQueue notationQueue, AtomicBoolean isSolving, AtomicBoolean startSolving, RubikFROOK rubikFROOK, BaseRubik rubik){
         this.notationQueue=notationQueue;
         this.isSolving=isSolving;
         this.startSolving=startSolving;
@@ -44,11 +45,11 @@ public class RubikAnimationThread extends Thread{
             if(notationQueue.isEmpty()){
                 // if it is empty that mean either 1.done all scrambles or 2.done solving
                 // either way, isSolving should be set to false
-                isSolving=false;
+                isSolving.set(false);
                 // if solving button is just pressed, set isSolving to true
-                if(startSolving){
-                    isSolving=true;
-                    startSolving=false;
+                if(startSolving.get()){
+                    isSolving.set(true);
+                    startSolving.set(false);
                     ArrayList<com.ggFROOK.Notation> solution = rubikFROOK.mainSolving();
                     for(String notationString: solution.stream().map(Object::toString).toList()){
                         notationQueue.add(Notation.valueOf(notationString));
@@ -98,7 +99,7 @@ public class RubikAnimationThread extends Thread{
         try{
             System.out.println(notation.toString());
             rubik.call(notation);
-            if(!isSolving) {
+            if(!isSolving.get()) {
                 rubikFROOK.call(notation.toString(), true);
             }
         }

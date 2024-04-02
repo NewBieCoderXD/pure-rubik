@@ -27,6 +27,7 @@ import org.example.prog_meth_project.pane.NotationStack;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.text.MessageFormat;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
 
@@ -37,9 +38,8 @@ public class StandardRubikPage {
     final Xform axisGroup = new Xform();
     final PerspectiveCamera camera = new PerspectiveCamera(true);
     final Xform cameraXform = new Xform();
-    volatile static MirrorRubik mirrorRubik;
 
-    volatile static StandardRubik standardRubik;
+    volatile static StandardRubik rubik;
     //    volatile static Queue<Notation> notationQueue = new LinkedList<>();
     volatile static NotationQueue notationQueue = new NotationQueue();
     private static final double CAMERA_INITIAL_DISTANCE = -100;
@@ -52,8 +52,8 @@ public class StandardRubikPage {
     private double startDragX;
     private double startDragY;
     volatile static RubikFROOK rubikFROOK = new RubikFROOK();
-    volatile static Boolean startSolving = false;
-    volatile static Boolean isSolving = false;
+    volatile static AtomicBoolean startSolving = new AtomicBoolean(false);
+    volatile static AtomicBoolean isSolving = new AtomicBoolean(false);
     volatile static NotationStack notationStack = NotationStack.getInstance();
     public static StandardRubikPage instance;
     public static Rectangle2D bounds;
@@ -144,7 +144,7 @@ public class StandardRubikPage {
 //        notationQueue.add(Notation.B);
 //        notationQueue.add(Notation.B_);
 
-        Thread rubikAnimationThread = new RubikAnimationThread(notationQueue, isSolving, startSolving, rubikFROOK, standardRubik);
+        Thread rubikAnimationThread = new RubikAnimationThread(notationQueue, isSolving, startSolving, rubikFROOK, rubik);
 
 
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -185,7 +185,7 @@ public class StandardRubikPage {
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                startSolving=true;
+                startSolving.set(true);
             }
         });
         return button;
@@ -225,9 +225,9 @@ public class StandardRubikPage {
     }
 
     private void buildRubik() {
-        mirrorRubik = new MirrorRubik();
+        rubik = new StandardRubik();
         rubikFROOK.initRubik();
-        world.getChildren().add(mirrorRubik);
+        world.getChildren().add(rubik);
     }
 
     private void buildCamera() {
