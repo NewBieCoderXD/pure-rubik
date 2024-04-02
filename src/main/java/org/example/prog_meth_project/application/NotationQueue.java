@@ -1,7 +1,7 @@
 package org.example.prog_meth_project.application;
 
 import javafx.application.Platform;
-import org.example.prog_meth_project.pane.NotationStack;
+import org.example.prog_meth_project.component.NotationStack;
 
 import java.util.LinkedList;
 

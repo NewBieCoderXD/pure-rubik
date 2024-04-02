@@ -35,6 +35,7 @@ public class RubikAnimationThread extends Thread{
         this.startSolving=startSolving;
         this.rubikFROOK=rubikFROOK;
         this.rubik=rubik;
+        super.setDaemon(true);
     }
     @Override
     public void run(){

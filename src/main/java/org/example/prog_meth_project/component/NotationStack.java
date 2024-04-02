@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.pane;
+package org.example.prog_meth_project.component;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;

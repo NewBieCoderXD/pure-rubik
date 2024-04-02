@@ -15,15 +15,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.application.NotationQueue;
 import org.example.prog_meth_project.application.RubikAnimationThread;
-import org.example.prog_meth_project.model.BaseRubik;
-import org.example.prog_meth_project.model.MirrorRubik;
 import org.example.prog_meth_project.model.StandardRubik;
-import org.example.prog_meth_project.pane.NotationStack;
+import org.example.prog_meth_project.component.NotationStack;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.text.MessageFormat;
@@ -92,9 +88,9 @@ public class StandardRubikPage {
         setAnglesText(anglesText);
         return anglesText;
     }
-    private Scene scene;
+    private SubScene scene;
 
-    public Scene getScene(){
+    public SubScene getScene(){
         return scene;
     }
 
@@ -109,7 +105,7 @@ public class StandardRubikPage {
         root.setPrefWidth(bounds.getWidth());
         root.setPrefHeight(bounds.getHeight());
 
-        scene = new Scene(new StackPane(subScene, root), bounds.getWidth(), bounds.getHeight());
+        scene = new SubScene(new StackPane(subScene, root), bounds.getWidth(), bounds.getHeight());
 
         Text anglesText = buildAnglesText();
 

@@ -7,6 +7,7 @@ public class Config {
     public static final Color CUBELET_MAIN_BOX_COLOR = Color.WHITE;
     public static final Color CUBELET_BORDER_COLOR = Color.BLACK;
     public static final double DRAG_SENSITIVITY = 0.1;
+    public static final double RUBIK_MENU_RATIO = 0.05;
     public static final double CUBELET_SMALLEST_WIDTH = 3;
     public static final double CUBELET_SMALLEST_HEIGHT = 1.4;
 
