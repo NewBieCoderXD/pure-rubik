@@ -26,12 +26,13 @@ import org.example.prog_meth_project.model.StandardRubik;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.text.MessageFormat;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
 
 public class StandardRubikPage {
-    final AnchorPane root = new AnchorPane();
+    final StackPane root = new StackPane();
     final Xform world = new Xform();
     private static final double AXIS_LENGTH = 250.0;
     final Xform axisGroup = new Xform();
@@ -107,29 +108,17 @@ public class StandardRubikPage {
 
         scene = new VBox(new StackPane(subScene3DView, root));
 
-//        subScene3DView.heightProperty().bind(scene.heightProperty());
-//        subScene3DView.widthProperty().bind(scene.widthProperty());
-
         Text anglesText = buildAnglesText();
-
-//        Region emptyRegion1 = new Region();
-//        VBox.setVgrow(emptyRegion1, Priority.ALWAYS);
-//
-//        Region emptyRegion2 = new Region();
-//        VBox.setVgrow(emptyRegion2, Priority.ALWAYS);
 
         GridPane notationMenu = buildMenus();
 
+        StackPane.setAlignment(anglesText,Pos.TOP_LEFT);
         root.getChildren().add(anglesText);
 
-//        root.getChildren().add(emptyRegion1);
 
-        AnchorPane.setLeftAnchor(notationStack,0.);
+        StackPane.setAlignment(notationStack,Pos.BOTTOM_CENTER);
         root.getChildren().add(notationStack);
 
-//        root.getChildren().add(emptyRegion2);
-
-        AnchorPane.setBottomAnchor(notationMenu,0.);
         root.getChildren().add(notationMenu);
 
 //        notationQueue.add(Notation.R);
@@ -194,7 +183,7 @@ public class StandardRubikPage {
 
     public GridPane buildMenus(){
         GridPane menu = new GridPane();
-        menu.setAlignment(Pos.CENTER);
+        menu.setAlignment(Pos.BOTTOM_CENTER);
         menu.setPrefWidth(root.getPrefWidth());
         Button solveButton = buildSolveButton();
         menu.add(solveButton,0,0,1,2);

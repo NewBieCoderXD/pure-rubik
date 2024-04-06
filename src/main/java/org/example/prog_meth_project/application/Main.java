@@ -29,13 +29,15 @@ public class Main extends Application {
 
         VBox standardRubikPage = StandardRubikPage.getInstance().getScene();
 
-        StackPane stackPane = new StackPane(standardRubikPage);
+        VBox stackPane = new VBox(standardRubikPage);
         Tab mirrorTab = new Tab("Standard", stackPane);
         Tab standardTab = new Tab("Mirror", MirrorRubikPage.getInstance().getScene());
 
         root.setTabMaxHeight(30);
-        StandardRubikPage.getInstance().subScene3DView.heightProperty().bind(root.heightProperty().subtract(root.getTabMaxHeight()));
+        root.setTabMinHeight(30);
+        StandardRubikPage.getInstance().subScene3DView.heightProperty().bind(root.heightProperty().subtract(root.getTabMaxHeight()).subtract(7));
         StandardRubikPage.getInstance().subScene3DView.widthProperty().bind(root.widthProperty());
+
 
         root.getTabs().addAll(mirrorTab,standardTab);
         root.setPrefSize(bounds.getWidth(),bounds.getHeight());
