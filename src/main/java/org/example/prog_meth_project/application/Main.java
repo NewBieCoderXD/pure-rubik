@@ -19,6 +19,7 @@ import org.scenicview.ScenicView;
 public class Main extends Application {
     public SubScene currentScene;
     public TabPane root = new TabPane();
+    public StandardRubikPage standardRubikPage = new StandardRubikPage();
     @Override
     public void start(Stage stage) {
         Screen screen = Screen.getPrimary();
@@ -27,19 +28,19 @@ public class Main extends Application {
         StandardRubikPage.setBounds(bounds);
         MirrorRubikPage.setBounds(bounds);
 
-        VBox standardRubikPage = StandardRubikPage.getInstance().getScene();
+        VBox standardRubikPageScene = standardRubikPage.getScene();
+//        VBox mirrorRubikPage = new MirrorRubikPage().getScene();
 
-        VBox stackPane = new VBox(standardRubikPage);
-        Tab mirrorTab = new Tab("Standard", stackPane);
-        Tab standardTab = new Tab("Mirror", MirrorRubikPage.getInstance().getScene());
+        Tab standardTab = new Tab("Standard", standardRubikPageScene);
+//        Tab mirrorTab = new Tab("Mirror", MirrorRubikPage.getScene());
 
         root.setTabMaxHeight(35);
         root.setTabMinHeight(35);
-        StandardRubikPage.getInstance().subScene3DView.heightProperty().bind(root.heightProperty().subtract(root.getTabMaxHeight()).subtract(7));
-        StandardRubikPage.getInstance().subScene3DView.widthProperty().bind(root.widthProperty());
+        standardRubikPage.subScene3DView.heightProperty().bind(root.heightProperty().subtract(root.getTabMaxHeight()).subtract(7));
+        standardRubikPage.subScene3DView.widthProperty().bind(root.widthProperty());
 
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        root.getTabs().addAll(mirrorTab,standardTab);
+        root.getTabs().addAll(standardTab);
         root.setPrefSize(bounds.getWidth(),bounds.getHeight());
         Scene scene = new Scene(new VBox(root));
         stage.setMaximized(true);

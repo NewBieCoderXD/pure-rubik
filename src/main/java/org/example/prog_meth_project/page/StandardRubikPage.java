@@ -55,19 +55,12 @@ public class StandardRubikPage {
     volatile static RubikFROOK rubikFROOK = new RubikFROOK();
     volatile static AtomicBoolean startSolving = new AtomicBoolean(false);
     volatile static AtomicBoolean isSolving = new AtomicBoolean(false);
-    public static StandardRubikPage instance;
     public static Rectangle2D bounds;
     public static void setBounds(Rectangle2D bounds){
         StandardRubikPage.bounds = bounds;
     }
-    public static StandardRubikPage getInstance(){
-        if(instance==null){
-            instance=new StandardRubikPage();
-        }
-        return instance;
-    }
 
-    private StandardRubikPage(){
+    public StandardRubikPage(){
         createScene();
     }
 
@@ -101,9 +94,6 @@ public class StandardRubikPage {
     public SubScene subScene3DView;
 
     public void createScene() {
-        if(bounds==null){
-            throw new RuntimeException("Bounds are not set");
-        }
         subScene3DView=build3DSubScene(500,500);
 
         scene = new VBox(new StackPane(subScene3DView, root));
@@ -115,7 +105,6 @@ public class StandardRubikPage {
         StackPane.setAlignment(anglesText,Pos.TOP_LEFT);
         root.getChildren().add(anglesText);
 
-        StackPane.setAlignment(notationStack,Pos.CENTER_LEFT);
         root.getChildren().add(notationStack);
 
         StackPane.setAlignment(notationMenu,Pos.BOTTOM_CENTER);

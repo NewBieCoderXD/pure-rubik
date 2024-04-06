@@ -41,15 +41,10 @@ public class MirrorRubikPage implements RubikPage{
     public static void setBounds(Rectangle2D bounds){
         MirrorRubikPage.bounds = bounds;
     }
-    public static void createInstance(Rectangle2D bounds){
-        MirrorRubikPage.setBounds(bounds);
-        instance = new MirrorRubikPage();
-    }
-    public static MirrorRubikPage getInstance(){
-        if(instance==null){
-            instance=new MirrorRubikPage();
-        }
-        return instance;
+
+    @Override
+    public AtomicBoolean getIsSolving(){
+        return isSolving;
     }
 
     @Override
@@ -96,6 +91,30 @@ public class MirrorRubikPage implements RubikPage{
     public Xform getAxisGroup() {
         return axisGroup;
     }
+    @Override
+    public NotationStack getNotationStack(){
+        return notationStack;
+    }
+
+    @Override
+    public double getStartDragX() {
+        return startDragX;
+    }
+
+    @Override
+    public double getStartDragY() {
+        return startDragY;
+    }
+
+    @Override
+    public void setStartDragX(double startDragX) {
+        this.startDragX = startDragX;
+    }
+
+    @Override
+    public void setStartDragY(double startDragY) {
+        this.startDragY = startDragY;
+    }
 
     @Override
     public void setRubik(BaseRubik rubik){
@@ -115,92 +134,10 @@ public class MirrorRubikPage implements RubikPage{
     private MirrorRubikPage(){
         createScene();
     }
+    private VBox scene;
 
-    private SubScene build3DSubScene(double width, double height){
-        SubScene subScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
-        subScene.setDepthTest(DepthTest.ENABLE);
-        buildCamera();
-        buildAxes();
-        buildRubik();
-        subScene.setCamera(camera);
-        return subScene;
-    }
-    private SubScene scene;
-
-    public SubScene getScene(){
+    @Override
+    public VBox getScene(){
         return scene;
     }
-
-    public void createScene() {
-        if(bounds==null){
-            throw new RuntimeException("Bounds are not set");
-        }
-//        Rectangle2D bounds = screen.getVisualBounds();
-
-        SubScene subScene=build3DSubScene(bounds.getWidth(), bounds.getHeight());
-
-        root.setPrefWidth(bounds.getWidth());
-        root.setPrefHeight(bounds.getHeight());
-
-        scene = new SubScene(new StackPane(subScene, root), bounds.getWidth(), bounds.getHeight());
-
-        Text anglesText = buildAnglesText();
-
-        Region emptyRegion1 = new Region();
-        VBox.setVgrow(emptyRegion1, Priority.ALWAYS);
-
-        Region emptyRegion2 = new Region();
-        VBox.setVgrow(emptyRegion2, Priority.ALWAYS);
-
-        GridPane notationMenu = buildMenus();
-
-        root.getChildren().add(anglesText);
-
-        root.getChildren().add(emptyRegion1);
-
-        root.getChildren().add(notationStack);
-
-        root.getChildren().add(emptyRegion2);
-
-        root.getChildren().add(notationMenu);
-
-//        notationQueue.add(Notation.R);
-//        notationQueue.add(Notation.R_);
-//        notationQueue.add(Notation.L);
-//        notationQueue.add(Notation.L_);
-//        notationQueue.add(Notation.U);
-//        notationQueue.add(Notation.U_);
-//        notationQueue.add(Notation.D);
-//        notationQueue.add(Notation.D_);
-//        notationQueue.add(Notation.F);
-//        notationQueue.add(Notation.F_);
-//        notationQueue.add(Notation.B);
-//        notationQueue.add(Notation.B_);
-
-        Thread rubikAnimationThread = new RubikAnimationThread(notationQueue, isSolving, hasStartedSolving, rubikSolver, rubik);
-
-
-        scene.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                startDragX = event.getSceneX();
-                startDragY = event.getSceneY();
-            }
-        });
-        scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double xDistance = event.getSceneX() - startDragX;
-                double yDistance = event.getSceneY() - startDragY;
-                startDragX = event.getSceneX();
-                startDragY = event.getSceneY();
-                cameraXform.rz.setAngle(cameraXform.rz.getAngle() - xDistance * Config.DRAG_SENSITIVITY);
-                cameraXform.rx.setAngle(cameraXform.rx.getAngle() - yDistance * Config.DRAG_SENSITIVITY);
-                setAnglesText(anglesText);
-            }
-        });
-        rubikAnimationThread.start();
-    }
-
-
 }

@@ -19,7 +19,7 @@ public class NotationStack extends VBox {
 
     public NotationStack(){
         this.setMaxSize(VBox.USE_PREF_SIZE, VBox.USE_PREF_SIZE);
-
+        StackPane.setAlignment(this,Pos.CENTER_LEFT);
         for(int i=0;i<5;i++){
             Text text = new Text("");
             text.setFont(new Font(26));

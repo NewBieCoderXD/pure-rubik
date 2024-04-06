@@ -5,11 +5,15 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Camera;
+import javafx.scene.DepthTest;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -19,6 +23,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.application.NotationQueue;
+import org.example.prog_meth_project.application.RubikAnimationThread;
+import org.example.prog_meth_project.component.NotationStack;
 import org.example.prog_meth_project.config.Config;
 import org.example.prog_meth_project.model.BaseRubik;
 import org.example.prog_meth_project.model.StandardRubik;
@@ -27,18 +33,21 @@ import org.example.prog_meth_project.rendering.Xform;
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
+
 public interface RubikPage {
 
-    public SubScene getScene();
+    public VBox getScene();
     public AtomicBoolean getHasStartedSolving();
 
     public NotationQueue getNotationQueue();
 //    public RubikPage getInstance();
 
     public BaseRubik getRubik();
-    public void setRubik(BaseRubik rubik);
 
     public RubikFROOK getRubikSolver();
+    public AtomicBoolean getIsSolving();
+
 
     public Xform getWorld();
 //    public void setBounds(Rectangle2D bounds);
@@ -47,6 +56,12 @@ public interface RubikPage {
 
     public Xform getCameraXform();
     public Xform getAxisGroup();
+    public NotationStack getNotationStack();
+    public double getStartDragX();
+    public double getStartDragY();
+    public void setStartDragX(double d);
+    public void setStartDragY(double d);
+    public void setRubik(BaseRubik rubik);
 
     default Text buildAnglesText(){
         Text anglesText = new Text();
@@ -60,7 +75,70 @@ public interface RubikPage {
         text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", getCameraXform().rx.getAngle(), getCameraXform().ry.getAngle(), getCameraXform().rz.getAngle()));
     }
 
-    public void createScene();
+    default SubScene build3DSubScene(double width, double height){
+        SubScene subScene = new SubScene(getWorld(), width, height, true, SceneAntialiasing.BALANCED);
+        subScene.setDepthTest(DepthTest.ENABLE);
+        buildCamera();
+        buildAxes();
+        buildRubik();
+        subScene.setCamera(getCamera());
+        return subScene;
+    };
+
+    default void createScene(){
+        SubScene subScene3DView=build3DSubScene(500,500);
+
+        getScene().getChildren().add(new StackPane(subScene3DView, getRoot()));
+
+        Text anglesText = buildAnglesText();
+
+        GridPane notationMenu = buildMenus();
+
+        StackPane.setAlignment(anglesText,Pos.TOP_LEFT);
+        getRoot().getChildren().add(anglesText);
+
+        getRoot().getChildren().add(getNotationStack());
+
+        StackPane.setAlignment(notationMenu,Pos.BOTTOM_CENTER);
+        getRoot().getChildren().add(notationMenu);
+
+//        notationQueue.add(Notation.R);
+//        notationQueue.add(Notation.R_);
+//        notationQueue.add(Notation.L);
+//        notationQueue.add(Notation.L_);
+//        notationQueue.add(Notation.U);
+//        notationQueue.add(Notation.U_);
+//        notationQueue.add(Notation.D);
+//        notationQueue.add(Notation.D_);
+//        notationQueue.add(Notation.F);
+//        notationQueue.add(Notation.F_);
+//        notationQueue.add(Notation.B);
+//        notationQueue.add(Notation.B_);
+
+        Thread rubikAnimationThread = new RubikAnimationThread(getNotationQueue(), getIsSolving(), getHasStartedSolving(), getRubikSolver(), getRubik());
+
+
+        getScene().setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                setStartDragX(event.getSceneX());
+                setStartDragY(event.getSceneY());
+            }
+        });
+        getScene().setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double xDistance = event.getSceneX() - getStartDragX();
+                double yDistance = event.getSceneY() - getStartDragY();
+                setStartDragX(event.getSceneX());
+                setStartDragY(event.getSceneY());
+                getCameraXform().rz.setAngle(getCameraXform().rz.getAngle() - xDistance * DRAG_SENSITIVITY);
+                getCameraXform().rx.setAngle(getCameraXform().rx.getAngle() - yDistance * DRAG_SENSITIVITY);
+                setAnglesText(anglesText);
+            }
+        });
+        rubikAnimationThread.start();
+    }
 
     default Button buildSolveButton(){
         Button button = new Button("solve");
