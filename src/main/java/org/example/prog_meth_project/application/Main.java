@@ -33,12 +33,12 @@ public class Main extends Application {
         Tab mirrorTab = new Tab("Standard", stackPane);
         Tab standardTab = new Tab("Mirror", MirrorRubikPage.getInstance().getScene());
 
-        root.setTabMaxHeight(30);
-        root.setTabMinHeight(30);
+        root.setTabMaxHeight(35);
+        root.setTabMinHeight(35);
         StandardRubikPage.getInstance().subScene3DView.heightProperty().bind(root.heightProperty().subtract(root.getTabMaxHeight()).subtract(7));
         StandardRubikPage.getInstance().subScene3DView.widthProperty().bind(root.widthProperty());
 
-
+        root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         root.getTabs().addAll(mirrorTab,standardTab);
         root.setPrefSize(bounds.getWidth(),bounds.getHeight());
         Scene scene = new Scene(new VBox(root));

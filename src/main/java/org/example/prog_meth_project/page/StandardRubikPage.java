@@ -41,7 +41,8 @@ public class StandardRubikPage {
 
     volatile static StandardRubik rubik;
     //    volatile static Queue<Notation> notationQueue = new LinkedList<>();
-    volatile static NotationQueue notationQueue = new NotationQueue();
+    volatile static NotationStack notationStack = new NotationStack();
+    volatile static NotationQueue notationQueue = new NotationQueue(notationStack);
     private static final double CAMERA_INITIAL_DISTANCE = -100;
     private static final double CAMERA_INITIAL_X_ANGLE = 45;
     private static final double CAMERA_INITIAL_Y_ANGLE = -180;
@@ -54,7 +55,6 @@ public class StandardRubikPage {
     volatile static RubikFROOK rubikFROOK = new RubikFROOK();
     volatile static AtomicBoolean startSolving = new AtomicBoolean(false);
     volatile static AtomicBoolean isSolving = new AtomicBoolean(false);
-    volatile static NotationStack notationStack = NotationStack.getInstance();
     public static StandardRubikPage instance;
     public static Rectangle2D bounds;
     public static void setBounds(Rectangle2D bounds){
@@ -115,10 +115,10 @@ public class StandardRubikPage {
         StackPane.setAlignment(anglesText,Pos.TOP_LEFT);
         root.getChildren().add(anglesText);
 
-
-        StackPane.setAlignment(notationStack,Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(notationStack,Pos.CENTER_LEFT);
         root.getChildren().add(notationStack);
 
+        StackPane.setAlignment(notationMenu,Pos.BOTTOM_CENTER);
         root.getChildren().add(notationMenu);
 
 //        notationQueue.add(Notation.R);
@@ -221,13 +221,7 @@ public class StandardRubikPage {
     }
 
     private void buildCamera() {
-//        root.getChildren().add(cameraXform);
-//        cameraXform.getChildren().add(cameraXform2);
-//        cameraXform2.getChildren().add(cameraXform3);
-//        cameraXform3.getChildren().add(camera);
         cameraXform.getChildren().add(camera);
-        cameraXform.setRotateZ(180.0);
-//        cameraXform3.setRotateZ(180.0);
 
         camera.setNearClip(CAMERA_NEAR_CLIP);
         camera.setFarClip(CAMERA_FAR_CLIP);

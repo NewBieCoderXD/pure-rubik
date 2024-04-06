@@ -28,14 +28,14 @@ public class MirrorRubikPage implements RubikPage{
     final Xform cameraXform = new Xform();
 
     volatile static MirrorRubik rubik;
-    volatile static NotationQueue notationQueue = new NotationQueue();
+    volatile static NotationStack notationStack = new NotationStack();
+    volatile static NotationQueue notationQueue = new NotationQueue(notationStack);
 
     private double startDragX;
     private double startDragY;
     volatile static RubikFROOK rubikSolver = new RubikFROOK();
     volatile static AtomicBoolean hasStartedSolving = new AtomicBoolean(false);
     volatile static AtomicBoolean isSolving = new AtomicBoolean(false);
-    volatile static NotationStack notationStack = NotationStack.getInstance();
     public static MirrorRubikPage instance;
     public static Rectangle2D bounds;
     public static void setBounds(Rectangle2D bounds){

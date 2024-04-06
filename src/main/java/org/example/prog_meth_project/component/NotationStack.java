@@ -14,16 +14,9 @@ import java.util.Iterator;
 import java.util.Queue;
 
 public class NotationStack extends VBox {
-    private static NotationStack instance;
     private final ArrayDeque<String> deque = new ArrayDeque<>();
     private final ArrayDeque<String> futureDeque = new ArrayDeque<>();
-    public static NotationStack getInstance(){
-        if(instance!=null){
-            return instance;
-        }
-        instance=new NotationStack();
-        return instance;
-    }
+
     public NotationStack(){
         this.setMaxSize(VBox.USE_PREF_SIZE, VBox.USE_PREF_SIZE);
 
