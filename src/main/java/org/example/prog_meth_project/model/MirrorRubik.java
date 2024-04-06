@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.example.prog_meth_project.config.Config.*;
-import static org.example.prog_meth_project.config.Config.CUBELET_DISTANCE;
 
 public class MirrorRubik extends BaseRubik {
 

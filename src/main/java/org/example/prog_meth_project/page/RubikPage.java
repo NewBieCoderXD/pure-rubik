@@ -4,10 +4,12 @@ import com.ggFROOK.RubikFROOK;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.*;
+import javafx.scene.Camera;
+import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -17,8 +19,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.application.NotationQueue;
-import org.example.prog_meth_project.application.RubikAnimationThread;
-import org.example.prog_meth_project.component.NotationStack;
 import org.example.prog_meth_project.config.Config;
 import org.example.prog_meth_project.model.BaseRubik;
 import org.example.prog_meth_project.model.StandardRubik;
@@ -27,29 +27,28 @@ import org.example.prog_meth_project.rendering.Xform;
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
-
 public interface RubikPage {
 
     public SubScene getScene();
     public AtomicBoolean getHasStartedSolving();
 
     public NotationQueue getNotationQueue();
+//    public RubikPage getInstance();
 
     public BaseRubik getRubik();
     public void setRubik(BaseRubik rubik);
 
     public RubikFROOK getRubikSolver();
 
-    public Pane getWorld();
-    public void setBounds(Rectangle2D bounds);
+    public Xform getWorld();
+//    public void setBounds(Rectangle2D bounds);
     public Pane getRoot();
     public Camera getCamera();
 
     public Xform getCameraXform();
     public Xform getAxisGroup();
 
-    private Text buildAnglesText(){
+    default Text buildAnglesText(){
         Text anglesText = new Text();
         anglesText.setTextAlignment(TextAlignment.LEFT);
         anglesText.setWrappingWidth(getRoot().getPrefWidth());
@@ -57,13 +56,13 @@ public interface RubikPage {
         return anglesText;
     }
 
-    private void setAnglesText(Text text){
+    default void setAnglesText(Text text){
         text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", getCameraXform().rx.getAngle(), getCameraXform().ry.getAngle(), getCameraXform().rz.getAngle()));
     }
 
     public void createScene();
 
-    private Button buildSolveButton(){
+    default Button buildSolveButton(){
         Button button = new Button("solve");
         button.setFont(new Font(30));
         button.setAlignment(Pos.CENTER);
@@ -85,7 +84,7 @@ public interface RubikPage {
         return button;
     }
 
-    private GridPane buildMenus(){
+    default GridPane buildMenus(){
         GridPane menu = new GridPane();
         menu.setAlignment(Pos.CENTER);
         menu.setPrefWidth(getRoot().getPrefWidth());
@@ -95,7 +94,7 @@ public interface RubikPage {
         return menu;
     }
 
-    private void buildMenu(GridPane menu){
+    default void buildMenu(GridPane menu){
         for(int i = 0; i< Notation.values().length; i++) {
             Notation notation = Notation.values()[i];
             Button notationButton = notationButton(notation);
@@ -103,7 +102,7 @@ public interface RubikPage {
         }
     }
 
-    private Button notationButton(Notation notation){
+    default Button notationButton(Notation notation){
         Button button = new Button(notation.toPrettyString());
         button.setFont(new Font(26));
         button.setPrefWidth(70);
@@ -118,13 +117,15 @@ public interface RubikPage {
         return button;
     }
 
-    private void buildRubik() {
-        setRubik(new StandardRubik());
+    public void initializeRubik();
+
+    default void buildRubik() {
+        initializeRubik();
         getRubikSolver().initRubik();
         getWorld().getChildren().add(getRubik());
     }
 
-    private void buildCamera(){
+    default void buildCamera(){
         getRoot().getChildren().add(getCameraXform());
         getCameraXform().getChildren().add(getCamera());
         getCameraXform().setRotateZ(180.0);
@@ -137,7 +138,7 @@ public interface RubikPage {
         getCameraXform().rz.setAngle(Config.CAMERA_INITIAL_Z_ANGLE);
     }
 
-    private void buildAxes(){
+    default void buildAxes(){
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);

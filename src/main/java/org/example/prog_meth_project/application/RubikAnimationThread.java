@@ -17,7 +17,6 @@ import org.example.prog_meth_project.rendering.Rotation;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.example.prog_meth_project.application.Main.*;
 import static org.example.prog_meth_project.config.Config.SECOND_PER_NOTATION;
 
 public class RubikAnimationThread extends Thread{

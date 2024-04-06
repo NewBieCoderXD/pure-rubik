@@ -1,16 +1,11 @@
 package org.example.prog_meth_project.model;
 
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.rendering.Axis;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
-
-import static org.example.prog_meth_project.config.Config.*;
-import static org.example.prog_meth_project.config.Config.CUBELET_DISTANCE;
 
 public abstract class BaseRubik extends Group {
 
