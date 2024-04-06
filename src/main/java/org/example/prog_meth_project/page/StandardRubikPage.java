@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
 
 public class StandardRubikPage {
-    final VBox root = new VBox();
+    final AnchorPane root = new AnchorPane();
     final Xform world = new Xform();
     private static final double AXIS_LENGTH = 250.0;
     final Xform axisGroup = new Xform();
@@ -91,43 +91,45 @@ public class StandardRubikPage {
         setAnglesText(anglesText);
         return anglesText;
     }
-    private SubScene scene;
+    private VBox scene;
 
-    public SubScene getScene(){
+    public VBox getScene(){
         return scene;
     }
+
+    public SubScene subScene3DView;
 
     public void createScene() {
         if(bounds==null){
             throw new RuntimeException("Bounds are not set");
         }
-//        Rectangle2D bounds = screen.getVisualBounds();
+        subScene3DView=build3DSubScene(500,500);
 
-        SubScene subScene=build3DSubScene(bounds.getWidth(), bounds.getHeight());
+        scene = new VBox(new StackPane(subScene3DView, root));
 
-        root.setPrefWidth(bounds.getWidth());
-        root.setPrefHeight(bounds.getHeight());
-
-        scene = new SubScene(new StackPane(subScene, root), bounds.getWidth(), bounds.getHeight());
+//        subScene3DView.heightProperty().bind(scene.heightProperty());
+//        subScene3DView.widthProperty().bind(scene.widthProperty());
 
         Text anglesText = buildAnglesText();
 
-        Region emptyRegion1 = new Region();
-        VBox.setVgrow(emptyRegion1, Priority.ALWAYS);
-
-        Region emptyRegion2 = new Region();
-        VBox.setVgrow(emptyRegion2, Priority.ALWAYS);
+//        Region emptyRegion1 = new Region();
+//        VBox.setVgrow(emptyRegion1, Priority.ALWAYS);
+//
+//        Region emptyRegion2 = new Region();
+//        VBox.setVgrow(emptyRegion2, Priority.ALWAYS);
 
         GridPane notationMenu = buildMenus();
 
         root.getChildren().add(anglesText);
 
-        root.getChildren().add(emptyRegion1);
+//        root.getChildren().add(emptyRegion1);
 
+        AnchorPane.setLeftAnchor(notationStack,0.);
         root.getChildren().add(notationStack);
 
-        root.getChildren().add(emptyRegion2);
+//        root.getChildren().add(emptyRegion2);
 
+        AnchorPane.setBottomAnchor(notationMenu,0.);
         root.getChildren().add(notationMenu);
 
 //        notationQueue.add(Notation.R);
@@ -230,7 +232,7 @@ public class StandardRubikPage {
     }
 
     private void buildCamera() {
-        root.getChildren().add(cameraXform);
+//        root.getChildren().add(cameraXform);
 //        cameraXform.getChildren().add(cameraXform2);
 //        cameraXform2.getChildren().add(cameraXform3);
 //        cameraXform3.getChildren().add(camera);
