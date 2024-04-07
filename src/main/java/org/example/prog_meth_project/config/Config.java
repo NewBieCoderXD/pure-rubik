@@ -21,4 +21,6 @@ public class Config {
     public static final double CAMERA_NEAR_CLIP = 0.01;
     public static final double CAMERA_FAR_CLIP = 10000.0;
     public static final double AXIS_LENGTH = 250.0;
+    public static final double INIT_SUBSCENE_WIDTH = 500;
+    public static final double INIT_SUBSCENE_HEIGHT = 500;
 }

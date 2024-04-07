@@ -36,24 +36,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
 
 public interface RubikPage {
-
     public VBox getScene();
     public AtomicBoolean getHasStartedSolving();
-
     public NotationQueue getNotationQueue();
 //    public RubikPage getInstance();
-
     public BaseRubik getRubik();
-
     public RubikFROOK getRubikSolver();
     public AtomicBoolean getIsSolving();
-
-
     public Xform getWorld();
 //    public void setBounds(Rectangle2D bounds);
     public Pane getRoot();
     public Camera getCamera();
-
     public Xform getCameraXform();
     public Xform getAxisGroup();
     public NotationStack getNotationStack();
@@ -62,12 +55,16 @@ public interface RubikPage {
     public void setStartDragX(double d);
     public void setStartDragY(double d);
     public void setRubik(BaseRubik rubik);
+    public SubScene getSubScene3DView();
+    public void setScene(VBox scene);
+    public void setSubScene3DView(SubScene subScene3DView);
 
     default Text buildAnglesText(){
         Text anglesText = new Text();
         anglesText.setTextAlignment(TextAlignment.LEFT);
         anglesText.setWrappingWidth(getRoot().getPrefWidth());
         setAnglesText(anglesText);
+        StackPane.setAlignment(anglesText,Pos.TOP_LEFT);
         return anglesText;
     }
 
@@ -75,45 +72,43 @@ public interface RubikPage {
         text.setText(MessageFormat.format("x:{0}\ny:{1}\nz:{2}", getCameraXform().rx.getAngle(), getCameraXform().ry.getAngle(), getCameraXform().rz.getAngle()));
     }
 
-    default SubScene build3DSubScene(double width, double height){
+    default void build3DSubScene(double width, double height){
         SubScene subScene = new SubScene(getWorld(), width, height, true, SceneAntialiasing.BALANCED);
         subScene.setDepthTest(DepthTest.ENABLE);
         buildCamera();
         buildAxes();
         buildRubik();
         subScene.setCamera(getCamera());
-        return subScene;
+        setSubScene3DView(subScene);
     };
 
     default void createScene(){
-        SubScene subScene3DView=build3DSubScene(500,500);
+        build3DSubScene(Config.INIT_SUBSCENE_WIDTH,Config.INIT_SUBSCENE_HEIGHT);
 
-        getScene().getChildren().add(new StackPane(subScene3DView, getRoot()));
+        setScene(new VBox(new StackPane(getSubScene3DView(),getRoot())));
 
         Text anglesText = buildAnglesText();
 
         GridPane notationMenu = buildMenus();
 
-        StackPane.setAlignment(anglesText,Pos.TOP_LEFT);
         getRoot().getChildren().add(anglesText);
 
         getRoot().getChildren().add(getNotationStack());
 
-        StackPane.setAlignment(notationMenu,Pos.BOTTOM_CENTER);
         getRoot().getChildren().add(notationMenu);
 
-//        notationQueue.add(Notation.R);
-//        notationQueue.add(Notation.R_);
-//        notationQueue.add(Notation.L);
-//        notationQueue.add(Notation.L_);
-//        notationQueue.add(Notation.U);
-//        notationQueue.add(Notation.U_);
-//        notationQueue.add(Notation.D);
-//        notationQueue.add(Notation.D_);
-//        notationQueue.add(Notation.F);
-//        notationQueue.add(Notation.F_);
-//        notationQueue.add(Notation.B);
-//        notationQueue.add(Notation.B_);
+    //        notationQueue.add(Notation.R);
+    //        notationQueue.add(Notation.R_);
+    //        notationQueue.add(Notation.L);
+    //        notationQueue.add(Notation.L_);
+    //        notationQueue.add(Notation.U);
+    //        notationQueue.add(Notation.U_);
+    //        notationQueue.add(Notation.D);
+    //        notationQueue.add(Notation.D_);
+    //        notationQueue.add(Notation.F);
+    //        notationQueue.add(Notation.F_);
+    //        notationQueue.add(Notation.B);
+    //        notationQueue.add(Notation.B_);
 
         Thread rubikAnimationThread = new RubikAnimationThread(getNotationQueue(), getIsSolving(), getHasStartedSolving(), getRubikSolver(), getRubik());
 
@@ -164,11 +159,12 @@ public interface RubikPage {
 
     default GridPane buildMenus(){
         GridPane menu = new GridPane();
-        menu.setAlignment(Pos.CENTER);
+        menu.setAlignment(Pos.BOTTOM_CENTER);
         menu.setPrefWidth(getRoot().getPrefWidth());
         Button solveButton = buildSolveButton();
         menu.add(solveButton,0,0,1,2);
         buildMenu(menu);
+        StackPane.setAlignment(menu,Pos.BOTTOM_CENTER);
         return menu;
     }
 
@@ -204,9 +200,7 @@ public interface RubikPage {
     }
 
     default void buildCamera(){
-        getRoot().getChildren().add(getCameraXform());
         getCameraXform().getChildren().add(getCamera());
-        getCameraXform().setRotateZ(180.0);
 
         getCamera().setNearClip(Config.CAMERA_NEAR_CLIP);
         getCamera().setFarClip(Config.CAMERA_FAR_CLIP);

@@ -25,9 +25,6 @@ public class Main extends Application {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
-        StandardRubikPage.setBounds(bounds);
-        MirrorRubikPage.setBounds(bounds);
-
         VBox standardRubikPageScene = standardRubikPage.getScene();
 //        VBox mirrorRubikPage = new MirrorRubikPage().getScene();
 
@@ -42,6 +39,7 @@ public class Main extends Application {
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         root.getTabs().addAll(standardTab);
         root.setPrefSize(bounds.getWidth(),bounds.getHeight());
+
         Scene scene = new Scene(new VBox(root));
         stage.setMaximized(true);
         stage.setTitle("rubik simulator");
