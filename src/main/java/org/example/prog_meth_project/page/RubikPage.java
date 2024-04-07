@@ -185,10 +185,7 @@ public interface RubikPage {
         return button;
     }
 
-    public void initializeRubik();
-
     default void buildRubik() {
-        initializeRubik();
         getRubikSolver().initRubik();
         getWorld().getChildren().add(getRubik());
     }

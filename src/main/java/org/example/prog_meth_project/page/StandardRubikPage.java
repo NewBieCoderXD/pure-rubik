@@ -30,6 +30,11 @@ public class StandardRubikPage implements RubikPage{
     private final NotationStack notationStack = new NotationStack();
     private final NotationQueue notationQueue = new NotationQueue(notationStack);
 
+    private VBox scene = new VBox();
+    public SubScene subScene3DView;
+    public StandardRubikPage(){
+        createScene();
+    }
     @Override
     public NotationStack getNotationStack() {
         return notationStack;
@@ -38,10 +43,6 @@ public class StandardRubikPage implements RubikPage{
     @Override
     public NotationQueue getNotationQueue() {
         return notationQueue;
-    }
-
-    public StandardRubikPage(){
-        createScene();
     }
 
     @Override
@@ -124,18 +125,9 @@ public class StandardRubikPage implements RubikPage{
         this.subScene3DView = subScene3DView;
     }
 
-    @Override
-    public void initializeRubik(){
-
-    }
-
-    private VBox scene = new VBox();
-
     public VBox getScene(){
         return scene;
     }
-
-    public SubScene subScene3DView;
 
 //    public void createScene() {
 //        subScene3DView=build3DSubScene(500,500);
