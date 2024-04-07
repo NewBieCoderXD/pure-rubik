@@ -7,8 +7,7 @@ import org.example.prog_meth_project.rendering.Axis;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-
-import static org.example.prog_meth_project.config.Config.*;
+import static org.example.prog_meth_project.config.Config.Mirror.*;
 
 public class MirrorRubik extends BaseRubik {
 
@@ -33,9 +32,9 @@ public class MirrorRubik extends BaseRubik {
 
     protected Point3D getLengthOfCubeletAt(int x, int y, int z){
         return new Point3D(
-                CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1),
-                CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1),
-                CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1)
+            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1),
+            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1),
+            CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1)
         );
     }
 
