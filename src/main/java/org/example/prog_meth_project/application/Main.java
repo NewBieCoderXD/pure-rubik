@@ -6,14 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.example.prog_meth_project.page.MirrorRubikPage;
 import org.example.prog_meth_project.page.StandardRubikPage;
-import javafx.stage.Window;
 import org.scenicview.ScenicView;
 
 public class Main extends Application {

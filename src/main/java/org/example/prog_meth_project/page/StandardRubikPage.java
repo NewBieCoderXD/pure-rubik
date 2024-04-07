@@ -1,52 +1,34 @@
 package org.example.prog_meth_project.page;
 
 import com.ggFROOK.RubikFROOK;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.DepthTest;
+import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Rotate;
-import org.example.prog_meth_project.application.Notation;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import org.example.prog_meth_project.application.NotationQueue;
-import org.example.prog_meth_project.application.RubikAnimationThread;
 import org.example.prog_meth_project.component.NotationStack;
 import org.example.prog_meth_project.model.BaseRubik;
 import org.example.prog_meth_project.model.StandardRubik;
 import org.example.prog_meth_project.rendering.Xform;
 
-import java.text.MessageFormat;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
-
 public class StandardRubikPage implements RubikPage{
-    final StackPane root = new StackPane();
-    final Xform world = new Xform();
-    final Xform axisGroup = new Xform();
-    final PerspectiveCamera camera = new PerspectiveCamera(true);
-    final Xform cameraXform = new Xform();
+    private final StackPane root = new StackPane();
+    private final Group world = new Group();
+    private final Group axisGroup = new Group();
+    private final PerspectiveCamera camera = new PerspectiveCamera(true);
+    private final Xform cameraXform = new Xform();
 
     private double startDragX;
     private double startDragY;
-    volatile RubikFROOK rubikSolver = new RubikFROOK();
-    volatile AtomicBoolean hasStartedSolving = new AtomicBoolean(false);
-    volatile AtomicBoolean isSolving = new AtomicBoolean(false);
-    volatile BaseRubik rubik = new StandardRubik();
-    private NotationStack notationStack = new NotationStack();
-    private NotationQueue notationQueue = new NotationQueue(notationStack);
+    private final RubikFROOK rubikSolver = new RubikFROOK();
+    private final AtomicBoolean hasStartedSolving = new AtomicBoolean(false);
+    private final AtomicBoolean isSolving = new AtomicBoolean(false);
+    private final BaseRubik rubik = new StandardRubik();
+    private final NotationStack notationStack = new NotationStack();
+    private final NotationQueue notationQueue = new NotationQueue(notationStack);
 
     @Override
     public NotationStack getNotationStack() {
@@ -73,12 +55,12 @@ public class StandardRubikPage implements RubikPage{
     }
 
     @Override
-    public Xform getWorld() {
+    public Group getWorld() {
         return world;
     }
 
     @Override
-    public Xform getAxisGroup() {
+    public Group getAxisGroup() {
         return axisGroup;
     }
 
@@ -120,11 +102,6 @@ public class StandardRubikPage implements RubikPage{
     @Override
     public BaseRubik getRubik() {
         return rubik;
-    }
-
-    @Override
-    public void setRubik(BaseRubik rubik) {
-        this.rubik=rubik;
     }
 
     @Override

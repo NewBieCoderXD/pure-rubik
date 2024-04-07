@@ -1,25 +1,5 @@
 package org.example.prog_meth_project.page;
 
-import com.ggFROOK.RubikFROOK;
-import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.DepthTest;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import org.example.prog_meth_project.application.NotationQueue;
-import org.example.prog_meth_project.application.RubikAnimationThread;
-import org.example.prog_meth_project.component.NotationStack;
-import org.example.prog_meth_project.config.Config;
-import org.example.prog_meth_project.model.BaseRubik;
-import org.example.prog_meth_project.model.MirrorRubik;
-import org.example.prog_meth_project.rendering.Xform;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
 public class MirrorRubikPage
 //        implements RubikPage
 {
