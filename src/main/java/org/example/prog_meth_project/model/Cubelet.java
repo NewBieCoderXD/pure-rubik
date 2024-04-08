@@ -1,15 +1,10 @@
 package org.example.prog_meth_project.model;
 
-import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Affine;
-import javafx.scene.transform.Rotate;
 
 import static org.example.prog_meth_project.config.Config.*;
 
@@ -87,17 +82,17 @@ public class Cubelet extends Group {
         return left;
     }
 
-    public Cubelet(double xLength, double yLength, double zLength, Color topColor, Color rightColor, Color leftColor, Color bottomColor, Color backColor, Color frontColor) {
+    public Cubelet(double xLength, double yLength, double zLength,int x, int y, int z) {
         Affine affine=new Affine();
         this.getTransforms().setAll(affine);
 
         mainBox = new Group();
-        Box left = buildLeft(xLength,yLength,zLength,Color.BLUE);
-        Box right = buildRight(xLength,yLength,zLength,Color.GREEN);
-        Box bottom = buildBottom(xLength,yLength,zLength,Color.WHITE);
-        Box back = buildBack(xLength,yLength,zLength,Color.ORANGE);
-        Box front = buildFront(xLength,yLength,zLength,Color.RED);
-        Box top = buildTop(xLength,yLength,zLength,Color.YELLOW);
+        Box left = buildLeft(xLength,yLength,zLength,(x==-1)?Color.BLUE: CUBELET_INSIDE_COLOR);
+        Box right = buildRight(xLength,yLength,zLength,(x==1)?Color.GREEN: CUBELET_INSIDE_COLOR);
+        Box back = buildBack(xLength,yLength,zLength,(y==1)?Color.ORANGE: CUBELET_INSIDE_COLOR);
+        Box front = buildFront(xLength,yLength,zLength,(y==-1)?Color.RED: CUBELET_INSIDE_COLOR);
+        Box top = buildTop(xLength,yLength,zLength,(z==-1)?Color.YELLOW: CUBELET_INSIDE_COLOR);
+        Box bottom = buildBottom(xLength,yLength,zLength,(z==1)?Color.WHITE: CUBELET_INSIDE_COLOR);
 
         for (int i = -1; i <= 1; i += 2) {
             for (int j = -1; j <= 1; j += 2) {
@@ -115,8 +110,5 @@ public class Cubelet extends Group {
             }
         }
         getChildren().addAll(top,bottom,front,back,left,right);
-    }
-    public Cubelet(double xLength, double yLength, double zLength) {
-        this(xLength,yLength,zLength,CUBELET_MAIN_BOX_COLOR,CUBELET_MAIN_BOX_COLOR,CUBELET_MAIN_BOX_COLOR,CUBELET_MAIN_BOX_COLOR,CUBELET_MAIN_BOX_COLOR,CUBELET_MAIN_BOX_COLOR);
     }
 }

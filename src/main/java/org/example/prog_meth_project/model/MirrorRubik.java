@@ -46,7 +46,7 @@ public class MirrorRubik extends BaseRubik {
         double yLength = lengthOfCubelet.getY();
         double zLength = lengthOfCubelet.getZ();
         Point3D lengthOfCenterCubelet = getLengthOfCubeletAt(0,0,0);
-        Cubelet cubelet = new Cubelet(xLength, yLength, zLength);
+        Cubelet cubelet = new Cubelet(xLength, yLength, zLength, x, y, z);
         cubelet.setTranslateX((lengthOfCenterCubelet.getX()/2 + xLength / 2 + CUBELET_DISTANCE) * -x);
         cubelet.setTranslateY((lengthOfCenterCubelet.getY()/2 + yLength / 2 + CUBELET_DISTANCE) * -y);
         cubelet.setTranslateZ((lengthOfCenterCubelet.getZ()/2 + zLength / 2 + CUBELET_DISTANCE) * -z);

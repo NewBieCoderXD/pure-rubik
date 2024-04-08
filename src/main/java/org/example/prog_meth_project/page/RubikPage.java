@@ -4,6 +4,7 @@ import com.ggFROOK.RubikFROOK;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.Camera;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -21,14 +22,14 @@ import org.example.prog_meth_project.application.Notation;
 import org.example.prog_meth_project.application.NotationQueue;
 import org.example.prog_meth_project.application.RubikAnimationThread;
 import org.example.prog_meth_project.component.NotationStack;
-import org.example.prog_meth_project.config.Config;
+import static org.example.prog_meth_project.config.Config.Camera.*;
 import org.example.prog_meth_project.model.BaseRubik;
 import org.example.prog_meth_project.rendering.Xform;
 
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.example.prog_meth_project.config.Config.DRAG_SENSITIVITY;
+import static org.example.prog_meth_project.config.Config.*;
 
 public interface RubikPage {
     public VBox getScene();
@@ -77,7 +78,7 @@ public interface RubikPage {
     };
 
     default void createScene(){
-        build3DSubScene(Config.INIT_SUBSCENE_WIDTH,Config.INIT_SUBSCENE_HEIGHT);
+        build3DSubScene(INIT_SUBSCENE_WIDTH,INIT_SUBSCENE_HEIGHT);
 
         setScene(new VBox(new StackPane(getSubScene3DView(),getRoot())));
 
@@ -193,12 +194,12 @@ public interface RubikPage {
     default void buildCamera(){
         getCameraXform().getChildren().add(getCamera());
 
-        getCamera().setNearClip(Config.CAMERA_NEAR_CLIP);
-        getCamera().setFarClip(Config.CAMERA_FAR_CLIP);
-        getCamera().setTranslateZ(Config.CAMERA_INITIAL_DISTANCE);
-        getCameraXform().ry.setAngle(Config.CAMERA_INITIAL_Y_ANGLE);
-        getCameraXform().rx.setAngle(Config.CAMERA_INITIAL_X_ANGLE);
-        getCameraXform().rz.setAngle(Config.CAMERA_INITIAL_Z_ANGLE);
+        getCamera().setNearClip(CAMERA_NEAR_CLIP);
+        getCamera().setFarClip(CAMERA_FAR_CLIP);
+        getCamera().setTranslateZ(CAMERA_INITIAL_DISTANCE);
+        getCameraXform().ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
+        getCameraXform().rx.setAngle(CAMERA_INITIAL_X_ANGLE);
+        getCameraXform().rz.setAngle(CAMERA_INITIAL_Z_ANGLE);
     }
 
     default void buildAxes(){
@@ -214,17 +215,17 @@ public interface RubikPage {
         blueMaterial.setDiffuseColor(Color.DARKBLUE);
         blueMaterial.setSpecularColor(Color.BLUE);
 
-        final Box xAxis = new Box(Config.AXIS_LENGTH, 1, 1);
-        final Box yAxis = new Box(1, Config.AXIS_LENGTH, 1);
-        final Box zAxis = new Box(1, 1, Config.AXIS_LENGTH);
+        final Box xAxis = new Box(AXIS_LENGTH, 1, 1);
+        final Box yAxis = new Box(1, AXIS_LENGTH, 1);
+        final Box zAxis = new Box(1, 1, AXIS_LENGTH);
 
         xAxis.setMaterial(redMaterial);
         yAxis.setMaterial(greenMaterial);
         zAxis.setMaterial(blueMaterial);
 
-        xAxis.setTranslateX(Config.AXIS_LENGTH / 2);
-        yAxis.setTranslateY(Config.AXIS_LENGTH / 2);
-        zAxis.setTranslateZ(Config.AXIS_LENGTH / 2);
+        xAxis.setTranslateX(AXIS_LENGTH / 2);
+        yAxis.setTranslateY(AXIS_LENGTH / 2);
+        zAxis.setTranslateZ(AXIS_LENGTH / 2);
 
         getAxisGroup().getChildren().addAll(xAxis, yAxis, zAxis);
         getAxisGroup().setVisible(true);

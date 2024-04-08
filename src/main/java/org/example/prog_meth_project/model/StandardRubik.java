@@ -37,7 +37,7 @@ public class StandardRubik extends BaseRubik{
     protected Cubelet createCubelet(int x, int y, int z) {
         double lengthOfCubelet = CUBELET_LENGTH;
 
-        Cubelet cubelet = new Cubelet(lengthOfCubelet, lengthOfCubelet, lengthOfCubelet);
+        Cubelet cubelet = new Cubelet(lengthOfCubelet, lengthOfCubelet, lengthOfCubelet, x, y, z);
 
         cubelet.setTranslateX((lengthOfCubelet + CUBELET_DISTANCE) * -x);
         cubelet.setTranslateY((lengthOfCubelet + CUBELET_DISTANCE) * -y);
