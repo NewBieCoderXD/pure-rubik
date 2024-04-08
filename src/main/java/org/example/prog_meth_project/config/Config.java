@@ -4,8 +4,7 @@ import javafx.scene.paint.Color;
 
 public class Config {
     public static class Mirror{
-        public static final double CUBELET_SMALLEST_WIDTH = 3;
-        public static final double CUBELET_SMALLEST_HEIGHT = 1.4;
+        public static final double CUBELET_MEDIUM_LENGTH = 5;
         public static final double CUBELET_DISTANCE = 1;
         public static final double CUBELET_GROWING_RATIO_VERTICAL= 2.6;
         public static final double CUBELET_GROWING_RATIO_HORIZONTAL= 1.5;

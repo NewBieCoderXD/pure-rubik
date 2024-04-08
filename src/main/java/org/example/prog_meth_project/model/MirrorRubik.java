@@ -32,15 +32,16 @@ public class MirrorRubik extends BaseRubik {
 
     protected Point3D getLengthOfCubeletAt(int x, int y, int z){
         return new Point3D(
-            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x + 1),
-            CUBELET_SMALLEST_WIDTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y + 1),
-            CUBELET_SMALLEST_HEIGHT * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z + 1)
+            CUBELET_MEDIUM_LENGTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x),
+            CUBELET_MEDIUM_LENGTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y),
+            CUBELET_MEDIUM_LENGTH * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z)
         );
     }
 
     @Override
     protected Cubelet createCubelet(int x, int y, int z) {
         Point3D lengthOfCubelet = getLengthOfCubeletAt(x,y,z);
+//        System.out.println(lengthOfCubelet.toString());
         double xLength = lengthOfCubelet.getX();
         double yLength = lengthOfCubelet.getY();
         double zLength = lengthOfCubelet.getZ();

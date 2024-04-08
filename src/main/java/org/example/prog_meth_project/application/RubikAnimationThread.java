@@ -97,7 +97,7 @@ public class RubikAnimationThread extends Thread{
 
     private void callNotation(Notation notation){
         try{
-            System.out.println(notation.toString());
+//            System.out.println(notation.toString());
             rubik.call(notation);
             if(!isSolving.get()) {
                 rubikFROOK.call(notation.toString(), true);
