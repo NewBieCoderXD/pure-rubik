@@ -17,7 +17,6 @@ import org.example.prog_meth_project.rendering.Rotation;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.example.prog_meth_project.application.Main.*;
 import static org.example.prog_meth_project.config.Config.SECOND_PER_NOTATION;
 
 public class RubikAnimationThread extends Thread{
@@ -98,7 +97,7 @@ public class RubikAnimationThread extends Thread{
 
     private void callNotation(Notation notation){
         try{
-            System.out.println(notation.toString());
+//            System.out.println(notation.toString());
             rubik.call(notation);
             if(!isSolving.get()) {
                 rubikFROOK.call(notation.toString(), true);

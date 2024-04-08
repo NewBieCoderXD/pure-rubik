@@ -1,15 +1,14 @@
 package org.example.prog_meth_project.model;
 
-import javafx.geometry.Point3D;
 import org.example.prog_meth_project.application.Notation;
+import org.example.prog_meth_project.config.Config;
 import org.example.prog_meth_project.rendering.Axis;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.example.prog_meth_project.config.Config.*;
-import static org.example.prog_meth_project.config.Config.CUBELET_DISTANCE;
+import static org.example.prog_meth_project.config.Config.Standard.*;
 
 public class StandardRubik extends BaseRubik{
 
@@ -36,12 +35,13 @@ public class StandardRubik extends BaseRubik{
 
     @Override
     protected Cubelet createCubelet(int x, int y, int z) {
-        double lengthOfCubelet = CUBELET_SMALLEST_WIDTH * CUBELET_GROWING_RATIO_HORIZONTAL;
+        double lengthOfCubelet = CUBELET_LENGTH;
 
-        Cubelet cubelet = new Cubelet(lengthOfCubelet, lengthOfCubelet, lengthOfCubelet);
-        cubelet.setTranslateX((lengthOfCubelet/2 + lengthOfCubelet / 2 + CUBELET_DISTANCE) * -x);
-        cubelet.setTranslateY((lengthOfCubelet/2 + lengthOfCubelet / 2 + CUBELET_DISTANCE) * -y);
-        cubelet.setTranslateZ((lengthOfCubelet/2 + lengthOfCubelet / 2 + CUBELET_DISTANCE) * -z);
+        Cubelet cubelet = new Cubelet(lengthOfCubelet, lengthOfCubelet, lengthOfCubelet, x, y, z);
+
+        cubelet.setTranslateX((lengthOfCubelet + CUBELET_DISTANCE) * -x);
+        cubelet.setTranslateY((lengthOfCubelet + CUBELET_DISTANCE) * -y);
+        cubelet.setTranslateZ((lengthOfCubelet + CUBELET_DISTANCE) * -z);
         return cubelet;
     }
 
