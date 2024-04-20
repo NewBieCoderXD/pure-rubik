@@ -1,7 +1,7 @@
-package org.example.prog_meth_project.application;
+package jula.prog_meth_project.rubik_solver.application;
 
 import javafx.application.Platform;
-import org.example.prog_meth_project.component.NotationStack;
+import jula.prog_meth_project.rubik_solver.component.NotationStack;
 
 import java.util.LinkedList;
 

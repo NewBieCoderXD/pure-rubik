@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.rendering;
+package jula.prog_meth_project.rubik_solver.rendering;
 
 import javafx.geometry.Point3D;
 

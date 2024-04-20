@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.application;
+package jula.prog_meth_project.rubik_solver.application;
 
 import com.ggFROOK.InvalidRubikNotation;
 import com.ggFROOK.RubikFROOK;
@@ -10,14 +10,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
-import org.example.prog_meth_project.model.BaseRubik;
-import org.example.prog_meth_project.model.Cubelet;
-import org.example.prog_meth_project.rendering.Rotation;
+import jula.prog_meth_project.rubik_solver.config.Config;
+import jula.prog_meth_project.rubik_solver.model.BaseRubik;
+import jula.prog_meth_project.rubik_solver.model.Cubelet;
+import jula.prog_meth_project.rubik_solver.rendering.Rotation;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.example.prog_meth_project.config.Config.SECOND_PER_NOTATION;
 
 public class RubikAnimationThread extends Thread{
     private static boolean isPTRunning = false;
@@ -88,7 +87,7 @@ public class RubikAnimationThread extends Thread{
                 new KeyFrame(
                         Duration.ZERO, new KeyValue(rotation, 0d)
                 ), new KeyFrame(
-                Duration.seconds(SECOND_PER_NOTATION), new KeyValue(rotation, sign * 90d)
+                Duration.seconds(Config.SECOND_PER_NOTATION), new KeyValue(rotation, sign * 90d)
         )
         );
         timeline.setCycleCount(1);

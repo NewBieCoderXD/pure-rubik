@@ -1,9 +1,9 @@
-package org.example.prog_meth_project.application;
+package jula.prog_meth_project.rubik_solver.application;
 
-import org.example.prog_meth_project.rendering.Axis;
+import jula.prog_meth_project.rubik_solver.rendering.Axis;
 
 public enum Notation {
-    R(false,Axis.X_AXIS,1),
+    R(false, Axis.X_AXIS,1),
     R_(true,Axis.X_AXIS,1),
     L(false,Axis.X_AXIS,-1),
     L_(true,Axis.X_AXIS,-1),

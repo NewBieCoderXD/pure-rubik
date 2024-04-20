@@ -1,17 +1,17 @@
-package org.example.prog_meth_project.model;
+package jula.prog_meth_project.rubik_solver.model;
 
-import javafx.geometry.Point3D;
-import org.example.prog_meth_project.application.Notation;
-import org.example.prog_meth_project.rendering.Axis;
+import jula.prog_meth_project.rubik_solver.application.Notation;
+import jula.prog_meth_project.rubik_solver.config.Config;
+import jula.prog_meth_project.rubik_solver.rendering.Axis;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import static org.example.prog_meth_project.config.Config.Mirror.*;
 
-public class MirrorRubik extends BaseRubik {
+public class StandardRubik extends BaseRubik{
 
-    public MirrorRubik() {
+
+    public StandardRubik() {
         rubikObjectMatrix = new ArrayList<>(3);
         for (int y = 0; y < 3 ; y++){
             rubikObjectMatrix.add(new ArrayList<>(3));
@@ -30,28 +30,18 @@ public class MirrorRubik extends BaseRubik {
         }
     }
 
-    protected Point3D getLengthOfCubeletAt(int x, int y, int z){
-        return new Point3D(
-            CUBELET_MEDIUM_LENGTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, x),
-            CUBELET_MEDIUM_LENGTH * Math.pow(CUBELET_GROWING_RATIO_HORIZONTAL, y),
-            CUBELET_MEDIUM_LENGTH * Math.pow(CUBELET_GROWING_RATIO_VERTICAL, z)
-        );
-    }
 
     @Override
     protected Cubelet createCubelet(int x, int y, int z) {
-        Point3D lengthOfCubelet = getLengthOfCubeletAt(x,y,z);
-//        System.out.println(lengthOfCubelet.toString());
-        double xLength = lengthOfCubelet.getX();
-        double yLength = lengthOfCubelet.getY();
-        double zLength = lengthOfCubelet.getZ();
-        Point3D lengthOfCenterCubelet = getLengthOfCubeletAt(0,0,0);
-        Cubelet cubelet = new Cubelet(xLength, yLength, zLength, x, y, z);
-        cubelet.setTranslateX((lengthOfCenterCubelet.getX()/2 + xLength / 2 + CUBELET_DISTANCE) * -x);
-        cubelet.setTranslateY((lengthOfCenterCubelet.getY()/2 + yLength / 2 + CUBELET_DISTANCE) * -y);
-        cubelet.setTranslateZ((lengthOfCenterCubelet.getZ()/2 + zLength / 2 + CUBELET_DISTANCE) * -z);
+        double lengthOfCubelet = Config.Standard.CUBELET_LENGTH;
+
+        Cubelet cubelet = new Cubelet(lengthOfCubelet, lengthOfCubelet, lengthOfCubelet, x, y, z);
+
+        cubelet.setTranslateX((lengthOfCubelet + Config.Standard.CUBELET_DISTANCE) * -x);
+        cubelet.setTranslateY((lengthOfCubelet + Config.Standard.CUBELET_DISTANCE) * -y);
+        cubelet.setTranslateZ((lengthOfCubelet + Config.Standard.CUBELET_DISTANCE) * -z);
         return cubelet;
-    }
+}
 
     @Override
     public ArrayList<Cubelet> getSideOfNotation(Notation notation){

@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.page;
+package jula.prog_meth_project.rubik_solver.page;
 
 import com.ggFROOK.RubikFROOK;
 import javafx.event.EventHandler;
@@ -18,20 +18,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
-import org.example.prog_meth_project.application.Notation;
-import org.example.prog_meth_project.application.NotationQueue;
-import org.example.prog_meth_project.application.RubikAnimationThread;
-import org.example.prog_meth_project.component.NotationStack;
-import static org.example.prog_meth_project.config.Config.Camera.*;
-import org.example.prog_meth_project.model.BaseRubik;
-import org.example.prog_meth_project.rendering.Xform;
+import jula.prog_meth_project.rubik_solver.model.BaseRubik;
+import jula.prog_meth_project.rubik_solver.rendering.Xform;
+import jula.prog_meth_project.rubik_solver.application.Notation;
+import jula.prog_meth_project.rubik_solver.application.NotationQueue;
+import jula.prog_meth_project.rubik_solver.application.RubikAnimationThread;
+import jula.prog_meth_project.rubik_solver.component.NotationStack;
+import static jula.prog_meth_project.rubik_solver.config.Config.Camera.*;
 
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.example.prog_meth_project.config.Config.*;
+import static jula.prog_meth_project.rubik_solver.config.Config.*;
 
 public interface RubikPage {
+    public String getName();
     public VBox getScene();
     public AtomicBoolean getHasStartedSolving();
     public NotationQueue getNotationQueue();

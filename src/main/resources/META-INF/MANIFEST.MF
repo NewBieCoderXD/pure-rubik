@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: org.example.prog_meth_project.application.Main
+Main-Class: jula.prog_meth_project.rubik_solver.application.Main
 

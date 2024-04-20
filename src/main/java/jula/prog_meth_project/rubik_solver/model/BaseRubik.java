@@ -1,8 +1,8 @@
-package org.example.prog_meth_project.model;
+package jula.prog_meth_project.rubik_solver.model;
 
 import javafx.scene.Group;
-import org.example.prog_meth_project.application.Notation;
-import org.example.prog_meth_project.rendering.Axis;
+import jula.prog_meth_project.rubik_solver.rendering.Axis;
+import jula.prog_meth_project.rubik_solver.application.Notation;
 
 import java.util.ArrayList;
 import java.util.Map;
