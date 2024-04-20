@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.model;
+package jula.prog_meth_project.rubik_solver.model;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -6,7 +6,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Affine;
 
-import static org.example.prog_meth_project.config.Config.*;
+import static jula.prog_meth_project.rubik_solver.config.Config.*;
 
 public class Cubelet extends Group {
     private void setMaterialOfBox(Box borderBox) {

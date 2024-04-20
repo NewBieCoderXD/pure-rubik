@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.page;
+package jula.prog_meth_project.rubik_solver.page;
 
 import com.ggFROOK.RubikFROOK;
 import javafx.scene.Group;
@@ -6,12 +6,11 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.example.prog_meth_project.application.NotationQueue;
-import org.example.prog_meth_project.component.NotationStack;
-import org.example.prog_meth_project.model.BaseRubik;
-import org.example.prog_meth_project.model.MirrorRubik;
-import org.example.prog_meth_project.model.StandardRubik;
-import org.example.prog_meth_project.rendering.Xform;
+import jula.prog_meth_project.rubik_solver.application.NotationQueue;
+import jula.prog_meth_project.rubik_solver.model.BaseRubik;
+import jula.prog_meth_project.rubik_solver.rendering.Xform;
+import jula.prog_meth_project.rubik_solver.component.NotationStack;
+import jula.prog_meth_project.rubik_solver.model.MirrorRubik;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -33,6 +32,11 @@ public class MirrorRubikPage implements RubikPage{
     public SubScene subScene3DView;
     public MirrorRubikPage(){
         createScene();
+    }
+
+    @Override
+    public String getName() {
+        return "Mirror";
     }
     @Override
     public AtomicBoolean getIsSolving(){

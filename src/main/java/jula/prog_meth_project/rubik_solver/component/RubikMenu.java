@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.component;
+package jula.prog_meth_project.rubik_solver.component;
 
 import javafx.scene.control.MenuBar;
 

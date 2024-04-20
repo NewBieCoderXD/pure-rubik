@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.config;
+package jula.prog_meth_project.rubik_solver.config;
 
 import javafx.scene.paint.Color;
 

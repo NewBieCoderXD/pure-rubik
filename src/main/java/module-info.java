@@ -1,4 +1,4 @@
-module org.example.prog_meth_project {
+module jula.prog_meth_project.rubik_solver {
     requires javafx.controls;
     requires javafx.fxml;
     requires transitive javafx.web;
@@ -7,6 +7,6 @@ module org.example.prog_meth_project {
 
     requires org.kordamp.bootstrapfx.core;
     requires scenic.view;
-    opens org.example.prog_meth_project.application to javafx.fxml;
-    exports org.example.prog_meth_project.application;
+    opens jula.prog_meth_project.rubik_solver.application to javafx.fxml;
+    exports jula.prog_meth_project.rubik_solver.application;
 }

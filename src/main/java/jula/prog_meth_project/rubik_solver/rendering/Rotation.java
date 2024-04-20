@@ -1,10 +1,10 @@
-package org.example.prog_meth_project.rendering;
+package jula.prog_meth_project.rubik_solver.rendering;
 
 import javafx.beans.value.WritableValue;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import org.example.prog_meth_project.application.Notation;
-import org.example.prog_meth_project.model.Cubelet;
+import jula.prog_meth_project.rubik_solver.model.Cubelet;
+import jula.prog_meth_project.rubik_solver.application.Notation;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class Rotation implements WritableValue<Double> {
     }
 
     public interface RotateListener{
-        public void onAngleChanges(Cubelet cubelet, Rotate rotate,double oldAngle,double newAngle);
+        public void onAngleChanges(Cubelet cubelet, Rotate rotate, double oldAngle, double newAngle);
     }
     private final Rotate rotate;
     private double angle=0;

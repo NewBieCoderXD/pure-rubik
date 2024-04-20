@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.component;
+package jula.prog_meth_project.rubik_solver.component;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import org.example.prog_meth_project.application.Notation;
+import jula.prog_meth_project.rubik_solver.application.Notation;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;

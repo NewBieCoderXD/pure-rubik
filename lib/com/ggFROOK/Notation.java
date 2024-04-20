@@ -1,7 +1,5 @@
 package com.ggFROOK;
 
-import org.example.prog_meth_project.rendering.Axis;
-
 public enum Notation {
     R(false),
     R_(true),

@@ -1,19 +1,17 @@
-package org.example.prog_meth_project.model;
+package jula.prog_meth_project.rubik_solver.model;
 
-import org.example.prog_meth_project.application.Notation;
-import org.example.prog_meth_project.config.Config;
-import org.example.prog_meth_project.rendering.Axis;
+import javafx.geometry.Point3D;
+import jula.prog_meth_project.rubik_solver.application.Notation;
+import jula.prog_meth_project.rubik_solver.config.Config;
+import jula.prog_meth_project.rubik_solver.rendering.Axis;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.example.prog_meth_project.config.Config.Standard.*;
+public class MirrorRubik extends BaseRubik {
 
-public class StandardRubik extends BaseRubik{
-
-
-    public StandardRubik() {
+    public MirrorRubik() {
         rubikObjectMatrix = new ArrayList<>(3);
         for (int y = 0; y < 3 ; y++){
             rubikObjectMatrix.add(new ArrayList<>(3));
@@ -32,16 +30,26 @@ public class StandardRubik extends BaseRubik{
         }
     }
 
+    protected Point3D getLengthOfCubeletAt(int x, int y, int z){
+        return new Point3D(
+            Config.Mirror.CUBELET_MEDIUM_LENGTH * Math.pow(Config.Mirror.CUBELET_GROWING_RATIO_HORIZONTAL, x),
+            Config.Mirror.CUBELET_MEDIUM_LENGTH * Math.pow(Config.Mirror.CUBELET_GROWING_RATIO_HORIZONTAL, y),
+            Config.Mirror.CUBELET_MEDIUM_LENGTH * Math.pow(Config.Mirror.CUBELET_GROWING_RATIO_VERTICAL, z)
+        );
+    }
 
     @Override
     protected Cubelet createCubelet(int x, int y, int z) {
-        double lengthOfCubelet = CUBELET_LENGTH;
-
-        Cubelet cubelet = new Cubelet(lengthOfCubelet, lengthOfCubelet, lengthOfCubelet, x, y, z);
-
-        cubelet.setTranslateX((lengthOfCubelet + CUBELET_DISTANCE) * -x);
-        cubelet.setTranslateY((lengthOfCubelet + CUBELET_DISTANCE) * -y);
-        cubelet.setTranslateZ((lengthOfCubelet + CUBELET_DISTANCE) * -z);
+        Point3D lengthOfCubelet = getLengthOfCubeletAt(x,y,z);
+//        System.out.println(lengthOfCubelet.toString());
+        double xLength = lengthOfCubelet.getX();
+        double yLength = lengthOfCubelet.getY();
+        double zLength = lengthOfCubelet.getZ();
+        Point3D lengthOfCenterCubelet = getLengthOfCubeletAt(0,0,0);
+        Cubelet cubelet = new Cubelet(xLength, yLength, zLength, x, y, z);
+        cubelet.setTranslateX((lengthOfCenterCubelet.getX()/2 + xLength / 2 + Config.Mirror.CUBELET_DISTANCE) * -x);
+        cubelet.setTranslateY((lengthOfCenterCubelet.getY()/2 + yLength / 2 + Config.Mirror.CUBELET_DISTANCE) * -y);
+        cubelet.setTranslateZ((lengthOfCenterCubelet.getZ()/2 + zLength / 2 + Config.Mirror.CUBELET_DISTANCE) * -z);
         return cubelet;
     }
 

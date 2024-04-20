@@ -1,4 +1,4 @@
-package org.example.prog_meth_project.application;
+package jula.prog_meth_project.rubik_solver.application;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -9,16 +9,16 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.example.prog_meth_project.page.MirrorRubikPage;
-import org.example.prog_meth_project.page.RubikPage;
-import org.example.prog_meth_project.page.StandardRubikPage;
-import org.scenicview.ScenicView;
+import jula.prog_meth_project.rubik_solver.page.MirrorRubikPage;
+import jula.prog_meth_project.rubik_solver.page.PocketRubikPage;
+import jula.prog_meth_project.rubik_solver.page.RubikPage;
+import jula.prog_meth_project.rubik_solver.page.StandardRubikPage;
+
+import java.util.Map;
 
 public class Main extends Application {
     public SubScene currentScene;
     public TabPane root = new TabPane();
-    public StandardRubikPage standardRubikPage = new StandardRubikPage();
-    public MirrorRubikPage mirrorRubikPage = new MirrorRubikPage();
     public void bindSubSceneSize(RubikPage node){
         node.getSubScene3DView().heightProperty().bind(root.heightProperty().subtract(root.getTabMaxHeight()).subtract(7));
         node.getSubScene3DView().widthProperty().bind(root.widthProperty());
@@ -31,14 +31,24 @@ public class Main extends Application {
         root.setTabMaxHeight(35);
         root.setTabMinHeight(35);
 
-        Tab standardTab = new Tab("Standard", standardRubikPage.getScene());
-        bindSubSceneSize(standardRubikPage);
-
-        Tab mirrorTab = new Tab("Mirror", mirrorRubikPage.getScene());
-        bindSubSceneSize(mirrorRubikPage);
+        RubikPage[] pages = new RubikPage[]{
+                new StandardRubikPage(),
+                new MirrorRubikPage(),
+                new PocketRubikPage(),
+        };
+        for (RubikPage page : pages) {
+            Tab standardTab = new Tab(page.getName(), page.getScene());
+            bindSubSceneSize(page);
+            root.getTabs().add(standardTab);
+        }
+//        Tab standardTab = new Tab("Standard", standardRubikPage.getScene());
+//        bindSubSceneSize(standardRubikPage);
+//
+//        Tab mirrorTab = new Tab("Mirror", mirrorRubikPage.getScene());
+//        bindSubSceneSize(mirrorRubikPage);
 
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        root.getTabs().addAll(standardTab,mirrorTab);
+//        root.getTabs().addAll(standardTab,mirrorTab);
         root.setPrefSize(bounds.getWidth(),bounds.getHeight());
 
         Scene scene = new Scene(new VBox(root));
