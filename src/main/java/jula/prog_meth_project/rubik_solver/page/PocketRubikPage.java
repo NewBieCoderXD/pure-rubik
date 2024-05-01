@@ -5,17 +5,12 @@ import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import jula.prog_meth_project.rubik_solver.application.Notation;
 import jula.prog_meth_project.rubik_solver.application.NotationQueue;
 import jula.prog_meth_project.rubik_solver.component.NotationStack;
 import jula.prog_meth_project.rubik_solver.model.BaseRubik;
-import jula.prog_meth_project.rubik_solver.model.MirrorRubik;
 import jula.prog_meth_project.rubik_solver.model.PocketRubik;
 import jula.prog_meth_project.rubik_solver.rendering.Xform;
 

@@ -3,8 +3,8 @@ package jula.prog_meth_project.rubik_solver.rendering;
 import javafx.beans.value.WritableValue;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import jula.prog_meth_project.rubik_solver.model.Cubelet;
 import jula.prog_meth_project.rubik_solver.application.Notation;
+import jula.prog_meth_project.rubik_solver.model.Cubelet;
 
 import java.util.ArrayList;
 

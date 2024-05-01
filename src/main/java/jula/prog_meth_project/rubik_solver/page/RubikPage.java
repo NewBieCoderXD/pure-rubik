@@ -3,8 +3,8 @@ package jula.prog_meth_project.rubik_solver.page;
 import com.ggFROOK.RubikFROOK;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.*;
 import javafx.scene.Camera;
+import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -18,18 +18,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
-import jula.prog_meth_project.rubik_solver.model.BaseRubik;
-import jula.prog_meth_project.rubik_solver.rendering.Xform;
 import jula.prog_meth_project.rubik_solver.application.Notation;
 import jula.prog_meth_project.rubik_solver.application.NotationQueue;
 import jula.prog_meth_project.rubik_solver.application.RubikAnimationThread;
 import jula.prog_meth_project.rubik_solver.component.NotationStack;
-import static jula.prog_meth_project.rubik_solver.config.Config.Camera.*;
+import jula.prog_meth_project.rubik_solver.model.BaseRubik;
+import jula.prog_meth_project.rubik_solver.rendering.Xform;
 
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static jula.prog_meth_project.rubik_solver.config.Config.*;
+import static jula.prog_meth_project.rubik_solver.config.Config.Camera.*;
 
 public interface RubikPage {
     public String getName();

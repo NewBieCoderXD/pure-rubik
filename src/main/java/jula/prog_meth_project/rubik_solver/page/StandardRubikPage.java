@@ -9,8 +9,8 @@ import javafx.scene.layout.VBox;
 import jula.prog_meth_project.rubik_solver.application.NotationQueue;
 import jula.prog_meth_project.rubik_solver.component.NotationStack;
 import jula.prog_meth_project.rubik_solver.model.BaseRubik;
-import jula.prog_meth_project.rubik_solver.rendering.Xform;
 import jula.prog_meth_project.rubik_solver.model.StandardRubik;
+import jula.prog_meth_project.rubik_solver.rendering.Xform;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

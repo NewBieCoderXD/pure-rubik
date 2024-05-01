@@ -11,6 +11,7 @@ import jula.prog_meth_project.rubik_solver.application.Notation;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Queue;
 
 public class NotationStack extends VBox {
@@ -62,26 +63,6 @@ public class NotationStack extends VBox {
         return (Text) wrappingBox.getChildren().get(0);
     }
 
-    public void update(Notation notation, Queue<Notation> notationQueue){
-        this.getNodeText(4).setText(this.getNodeText(3).getText());
-        this.getNodeText(3).setText(this.getNodeText(2).getText());
-        this.getNodeText(2).setText(notation.toPrettyString());
-        Iterator<Notation> currentStackNode = notationQueue.iterator();
-        for(int i=1;i>=0;i--){
-            if(currentStackNode.hasNext()){
-                Notation currentNotation = currentStackNode.next();
-                this.getNodeText(i).setText(currentNotation.toPrettyString());
-                continue;
-            }
-            this.getNodeText(i).setText("");
-        }
-    }
-    public ArrayDeque<String> getDeque(){
-        return deque;
-    }
-    public ArrayDeque<String> getFutureDeque(){
-        return futureDeque;
-    }
     public void update(){
 //        System.out.println("future "+futureDeque.size());
 //        System.out.println("deque "+deque.size());
@@ -113,7 +94,7 @@ public class NotationStack extends VBox {
     public void poll(){
         if(!futureDeque.isEmpty()) {
             deque.pollLast();
-            deque.addFirst(futureDeque.pollLast());
+            deque.addFirst(Objects.requireNonNull(futureDeque.pollLast()));
         }
         Platform.runLater(this::update);
     }

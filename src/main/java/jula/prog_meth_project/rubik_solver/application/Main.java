@@ -3,7 +3,6 @@ package jula.prog_meth_project.rubik_solver.application;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
@@ -14,10 +13,7 @@ import jula.prog_meth_project.rubik_solver.page.PocketRubikPage;
 import jula.prog_meth_project.rubik_solver.page.RubikPage;
 import jula.prog_meth_project.rubik_solver.page.StandardRubikPage;
 
-import java.util.Map;
-
 public class Main extends Application {
-    public SubScene currentScene;
     public TabPane root = new TabPane();
     public void bindSubSceneSize(RubikPage node){
         node.getSubScene3DView().heightProperty().bind(root.heightProperty().subtract(root.getTabMaxHeight()).subtract(7));
@@ -41,11 +37,6 @@ public class Main extends Application {
             bindSubSceneSize(page);
             root.getTabs().add(standardTab);
         }
-//        Tab standardTab = new Tab("Standard", standardRubikPage.getScene());
-//        bindSubSceneSize(standardRubikPage);
-//
-//        Tab mirrorTab = new Tab("Mirror", mirrorRubikPage.getScene());
-//        bindSubSceneSize(mirrorRubikPage);
 
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 //        root.getTabs().addAll(standardTab,mirrorTab);
@@ -57,7 +48,6 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 //        ScenicView.show(scene);
-
     }
 
     public static void main(String[] args) {
