@@ -1,0 +1,371 @@
+@startuml
+interface jula.prog_meth_project.rubik_simulator_3d.page.RubikPage {
++ String getName()
++ VBox getScene()
++ AtomicBoolean getHasStartedSolving()
++ NotationQueue getNotationQueue()
++ BaseRubik getRubik()
++ RubikFROOK getRubikSolver()
++ AtomicBoolean getIsSolving()
++ Group getWorld()
++ Pane getRoot()
++ Camera getCamera()
++ Xform getCameraXform()
++ Group getAxisGroup()
++ NotationStack getNotationStack()
++ double getStartDragX()
++ double getStartDragY()
++ void setStartDragX(double)
++ void setStartDragY(double)
++ SubScene getSubScene3DView()
++ void setScene(VBox)
++ void setSubScene3DView(SubScene)
+~ Text buildAnglesText()
+~ void setAnglesText(Text)
+~ void build3DSubScene(double,double)
+~ void createScene()
+~ Button buildSolveButton()
+~ GridPane buildMenus()
+~ void buildMenu(GridPane)
+~ Button notationButton(Notation)
+~ void buildRubik()
+~ void buildCamera()
+~ void buildAxes()
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.rendering.Xform {
++ Translate t
++ Translate p
++ Translate ip
++ Rotate rx
++ Rotate ry
++ Rotate rz
++ Scale s
++ <<Create>> Xform()
++ <<Create>> Xform(RotateOrder)
++ void setTranslate(double,double,double)
++ void setTranslate(double,double)
++ void setTx(double)
++ void setTy(double)
++ void setTz(double)
++ void setRotate(double,double,double)
++ void setRotateX(double)
++ void setRotateY(double)
++ void setRotateZ(double)
++ void setRy(double)
++ void setRz(double)
++ void setScale(double)
++ void setSx(double)
++ void setSy(double)
++ void setSz(double)
++ void setPivot(double,double,double)
++ void reset()
++ void resetTSP()
++ void debug()
+}
+
+
+enum jula.prog_meth_project.rubik_simulator_3d.rendering.RotateOrder {
++  XYZ
++  XZY
++  YXZ
++  YZX
++  ZXY
++  ZYX
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.model.MirrorRubik {
++ <<Create>> MirrorRubik()
+# Point3D getLengthOfCubeletAt(int,int,int)
+# Cubelet createCubelet(int,int,int)
++ ArrayList<Cubelet> getSideOfNotation(Notation)
++ ArrayList<Cubelet> getSideAny(int,Axis)
++ ArrayList<Cubelet> getSideX(int)
++ ArrayList<Cubelet> getSideY(int)
++ ArrayList<Cubelet> getSideZ(int)
+# void swapFromNotation(Notation,Map.Entry<Integer,Integer>,Map.Entry<Integer,Integer>)
+# void swapCorners(Notation)
+# void swapEdges(Notation)
+# void swapThreeTimes(Notation,Map.Entry<Integer,Integer>[])
++ void call(Notation)
+# void swapRubikMatrix(int,int,int,int,int,int)
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.rendering.Rotation {
+- Rotate rotate
+- double angle
+- Cubelet cubelet
+- ArrayList<RotateListener> listeners
++ <<Create>> Rotation(Cubelet,Notation)
++ Double getValue()
++ void setValue(Double)
++ void addListener(RotateListener)
++ void setAngle(double)
+}
+
+
+interface jula.prog_meth_project.rubik_simulator_3d.rendering.Rotation$RotateListener {
++ void onAngleChanges(Cubelet,Rotate,double,double)
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.component.NotationStack {
+- ArrayDeque<String> deque
+- ArrayDeque<String> futureDeque
++ <<Create>> NotationStack()
++ Text getNodeText(int)
++ void update()
++ void add(Notation)
++ void poll()
+}
+
+
+class jula.prog_meth_project.rubik_simulator_3d.config.Config {
++ {static} double CUBELET_BORDER_WIDTH
++ {static} Color CUBELET_INSIDE_COLOR
++ {static} Color CUBELET_BORDER_COLOR
++ {static} double DRAG_SENSITIVITY
++ {static} double RUBIK_MENU_RATIO
++ {static} double SECOND_PER_NOTATION
++ {static} double AXIS_LENGTH
++ {static} double INIT_SUBSCENE_WIDTH
++ {static} double INIT_SUBSCENE_HEIGHT
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.config.Config$Mirror {
++ {static} double CUBELET_MEDIUM_LENGTH
++ {static} double CUBELET_DISTANCE
++ {static} double CUBELET_GROWING_RATIO_VERTICAL
++ {static} double CUBELET_GROWING_RATIO_HORIZONTAL
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.config.Config$Standard {
++ {static} double CUBELET_LENGTH
++ {static} double CUBELET_DISTANCE
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.config.Config$Camera {
++ {static} double CAMERA_INITIAL_DISTANCE
++ {static} double CAMERA_INITIAL_X_ANGLE
++ {static} double CAMERA_INITIAL_Y_ANGLE
++ {static} double CAMERA_INITIAL_Z_ANGLE
++ {static} double CAMERA_NEAR_CLIP
++ {static} double CAMERA_FAR_CLIP
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.page.MirrorRubikPage {
+- StackPane root
+- Group world
+- Group axisGroup
+- PerspectiveCamera camera
+- Xform cameraXform
+- double startDragX
+- double startDragY
+- RubikFROOK rubikSolver
+- AtomicBoolean hasStartedSolving
+- AtomicBoolean isSolving
+- BaseRubik rubik
+- NotationStack notationStack
+- NotationQueue notationQueue
+- VBox scene
++ SubScene subScene3DView
++ <<Create>> MirrorRubikPage()
++ String getName()
++ AtomicBoolean getIsSolving()
++ AtomicBoolean getHasStartedSolving()
++ NotationQueue getNotationQueue()
++ BaseRubik getRubik()
++ RubikFROOK getRubikSolver()
++ Group getWorld()
++ StackPane getRoot()
++ PerspectiveCamera getCamera()
++ Xform getCameraXform()
++ Group getAxisGroup()
++ NotationStack getNotationStack()
++ double getStartDragX()
++ double getStartDragY()
++ SubScene getSubScene3DView()
++ void setScene(VBox)
++ void setSubScene3DView(SubScene)
++ void setStartDragX(double)
++ void setStartDragY(double)
++ VBox getScene()
+}
+
+
+class jula.prog_meth_project.rubik_simulator_3d.model.StandardRubik {
++ <<Create>> StandardRubik()
+# Cubelet createCubelet(int,int,int)
++ ArrayList<Cubelet> getSideOfNotation(Notation)
++ ArrayList<Cubelet> getSideAny(int,Axis)
++ ArrayList<Cubelet> getSideX(int)
++ ArrayList<Cubelet> getSideY(int)
++ ArrayList<Cubelet> getSideZ(int)
+# void swapFromNotation(Notation,Map.Entry<Integer,Integer>,Map.Entry<Integer,Integer>)
+# void swapCorners(Notation)
+# void swapEdges(Notation)
+# void swapThreeTimes(Notation,Map.Entry<Integer,Integer>[])
++ void call(Notation)
+# void swapRubikMatrix(int,int,int,int,int,int)
+}
+
+class jula.prog_meth_project.rubik_simulator_3d.model.Cubelet {
+- Group mainBox
++ <<Create>> Cubelet(double,double,double,int,int,int)
+- void setMaterialOfBox(Box)
+- Box makeXBorder(double,double,double,int,int)
+- Box makeYBorder(double,double,double,int,int)
+- Box makeZBorder(double,double,double,int,int)
++ Affine getAffine()
++ void setAffine(Affine)
++ Box buildFront(double,double,double,Color)
++ Box buildBack(double,double,double,Color)
++ Box buildTop(double,double,double,Color)
++ Box buildBottom(double,double,double,Color)
++ Box buildLeft(double,double,double,Color)
++ Box buildRight(double,double,double,Color)
+}
+
+
+class jula.prog_meth_project.rubik_simulator_3d.page.StandardRubikPage {
+- StackPane root
+- Group world
+- Group axisGroup
+- PerspectiveCamera camera
+- Xform cameraXform
+- double startDragX
+- double startDragY
+- RubikFROOK rubikSolver
+- AtomicBoolean hasStartedSolving
+- AtomicBoolean isSolving
+- BaseRubik rubik
+- NotationStack notationStack
+- NotationQueue notationQueue
+- VBox scene
++ SubScene subScene3DView
++ <<Create>> StandardRubikPage()
++ String getName()
++ NotationStack getNotationStack()
++ NotationQueue getNotationQueue()
++ double getStartDragX()
++ AtomicBoolean getIsSolving()
++ Group getWorld()
++ Group getAxisGroup()
++ RubikFROOK getRubikSolver()
++ Xform getCameraXform()
++ StackPane getRoot()
++ double getStartDragY()
++ AtomicBoolean getHasStartedSolving()
++ SubScene getSubScene3DView()
++ PerspectiveCamera getCamera()
++ BaseRubik getRubik()
++ void setScene(VBox)
++ void setStartDragY(double)
++ void setStartDragX(double)
++ void setSubScene3DView(SubScene)
++ VBox getScene()
+}
+
+
+class jula.prog_meth_project.rubik_simulator_3d.page.PocketRubikPage {
+- StackPane root
+- Group world
+- Group axisGroup
+- PerspectiveCamera camera
+- Xform cameraXform
+- double startDragX
+- double startDragY
+- RubikFROOK rubikSolver
+- AtomicBoolean hasStartedSolving
+- AtomicBoolean isSolving
+- BaseRubik rubik
+- NotationStack notationStack
+- NotationQueue notationQueue
+- VBox scene
++ SubScene subScene3DView
++ <<Create>> PocketRubikPage()
++ String getName()
++ VBox getScene()
++ AtomicBoolean getHasStartedSolving()
++ NotationQueue getNotationQueue()
++ BaseRubik getRubik()
++ RubikFROOK getRubikSolver()
++ AtomicBoolean getIsSolving()
++ Group getWorld()
++ Pane getRoot()
++ Camera getCamera()
++ Xform getCameraXform()
++ Group getAxisGroup()
++ NotationStack getNotationStack()
++ double getStartDragX()
++ double getStartDragY()
++ void setStartDragX(double)
++ void setStartDragY(double)
++ SubScene getSubScene3DView()
++ void setScene(VBox)
++ void setSubScene3DView(SubScene)
+}
+
+
+abstract class jula.prog_meth_project.rubik_simulator_3d.model.BaseRubik {
+# ArrayList<ArrayList<ArrayList<Cubelet>>> rubikObjectMatrix
++ <<Create>> BaseRubik()
++ ArrayList<ArrayList<ArrayList<Cubelet>>> getObjectMatrix()
+# {abstract}Cubelet createCubelet(int,int,int)
++ ArrayList<Cubelet> getSideOfNotation(Notation)
++ ArrayList<Cubelet> getSideAny(int,Axis)
++ {abstract}ArrayList<Cubelet> getSideX(int)
++ {abstract}ArrayList<Cubelet> getSideY(int)
++ {abstract}ArrayList<Cubelet> getSideZ(int)
+# {abstract}void swapFromNotation(Notation,Map.Entry<Integer,Integer>,Map.Entry<Integer,Integer>)
+# {abstract}void swapCorners(Notation)
+# {abstract}void swapEdges(Notation)
+# {abstract}void swapThreeTimes(Notation,Map.Entry<Integer,Integer>[])
++ {abstract}void call(Notation)
+# {abstract}void swapRubikMatrix(int,int,int,int,int,int)
+}
+
+
+class jula.prog_meth_project.rubik_simulator_3d.model.PocketRubik {
++ int dimension
++ <<Create>> PocketRubik()
+# Cubelet createCubelet(int,int,int)
++ ArrayList<Cubelet> getSideX(int)
++ ArrayList<Cubelet> getSideY(int)
++ ArrayList<Cubelet> getSideZ(int)
+# void swapFromNotation(Notation,Map.Entry<Integer,Integer>,Map.Entry<Integer,Integer>)
+# void swapCorners(Notation)
+# void swapEdges(Notation)
+# void swapThreeTimes(Notation,Map.Entry<Integer,Integer>[])
++ void call(Notation)
+# void swapRubikMatrix(int,int,int,int,int,int)
+}
+
+
+enum jula.prog_meth_project.rubik_simulator_3d.rendering.Axis {
++  X_AXIS
++  Y_AXIS
++  Z_AXIS
+- Point3D point3D
+~ <<Create>> Axis(Point3D)
++ Point3D toPoint3D()
+}
+
+
+
+
+javafx.scene.Group <|-- jula.prog_meth_project.rubik_simulator_3d.rendering.Xform
+jula.prog_meth_project.rubik_simulator_3d.model.BaseRubik <|-- jula.prog_meth_project.rubik_simulator_3d.model.MirrorRubik
+javafx.beans.value.WritableValue <|.. jula.prog_meth_project.rubik_simulator_3d.rendering.Rotation
+jula.prog_meth_project.rubik_simulator_3d.rendering.Rotation +.. jula.prog_meth_project.rubik_simulator_3d.rendering.Rotation$RotateListener
+jula.prog_meth_project.rubik_simulator_3d.component.VBox <|-- jula.prog_meth_project.rubik_simulator_3d.component.NotationStack
+jula.prog_meth_project.rubik_simulator_3d.config.Config +.. jula.prog_meth_project.rubik_simulator_3d.config.Config$Mirror
+jula.prog_meth_project.rubik_simulator_3d.config.Config +.. jula.prog_meth_project.rubik_simulator_3d.config.Config$Standard
+jula.prog_meth_project.rubik_simulator_3d.config.Config +.. jula.prog_meth_project.rubik_simulator_3d.config.Config$Camera
+jula.prog_meth_project.rubik_simulator_3d.page.RubikPage <|.. jula.prog_meth_project.rubik_simulator_3d.page.MirrorRubikPage
+jula.prog_meth_project.rubik_simulator_3d.model.BaseRubik <|-- jula.prog_meth_project.rubik_simulator_3d.model.StandardRubik
+javafx.scene.Group <|-- jula.prog_meth_project.rubik_simulator_3d.model.Cubelet
+jula.prog_meth_project.rubik_simulator_3d.page.RubikPage <|.. jula.prog_meth_project.rubik_simulator_3d.page.StandardRubikPage
+jula.prog_meth_project.rubik_simulator_3d.page.RubikPage <|.. jula.prog_meth_project.rubik_simulator_3d.page.PocketRubikPage
+javafx.scene.Group <|-- jula.prog_meth_project.rubik_simulator_3d.model.BaseRubik
+jula.prog_meth_project.rubik_simulator_3d.model.BaseRubik <|-- jula.prog_meth_project.rubik_simulator_3d.model.PocketRubik
+@enduml

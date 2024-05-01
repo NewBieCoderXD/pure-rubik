@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>rubik_solver</artifactId>
+    <artifactId>rubik_simulator_3d</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>prog_meth_project</name>
 
